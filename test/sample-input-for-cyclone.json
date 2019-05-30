@@ -1,0 +1,122 @@
+{
+    "task": {
+        "method": {
+            "type": "simulation using transition tables",
+            "id": "Cyclone",
+            "description": "Iterates over the state space of a graph input and produces all limit cycles in the state space and outputs these, along with the percentage of the state space",
+            "generate": "edges"
+	},
+        "input": [
+            {
+                "type": "model",
+                "description": "my-first-model",
+                "simulationName": "Unmodified",
+                "updateRules": [
+                    {
+                        "target": "CAP",
+                        "functions": [
+                            {
+				"inputVariables": ["CAP","CAP"],
+                                "transitionTable": [
+                                        [[0],0],
+                                        [[1],1]
+                                    ]                         
+                            }
+                        ]
+                    },
+                    {
+                        "target": "mRNA",
+                        "functions": [
+                            {
+                                "inputVariables": ["CAP","LacI","mRNA","mRNA"],
+                                "transitionTable": [
+                                        [[0,0,0],0],
+                                        [[0,0,1],1],
+                                        [[0,1,0],0],
+                                        [[0,1,1],0],
+                                        [[0,2,0],0],
+                                        [[0,2,1],0],
+                                        [[1,0,0],1],
+                                        [[1,0,1],0],
+                                        [[1,1,0],0],
+                                        [[1,1,1],0],
+                                        [[1,2,0],0],
+                                        [[1,2,1],0]      
+                                  ]
+                            }
+                         ]   
+                    },
+                    {
+                        "target": "LacY",
+                        "functions": [
+                            {
+                                "inputVariables": ["mRNA","LacY","LacY"],
+                                "transitionTable": [
+                                        [[0,0],0],
+                                        [[0,1],1],
+                                        [[1,0],1],
+                                        [[1,1],1]
+                                   ]
+                             }
+                        ]
+                    },
+                    {
+                        "target": "LacZ",
+                        "functions": [
+                            {
+                                "inputVariables": ["mRNA","LacZ","LacZ"],
+                                "transitionTable": [
+                                        [[0,0],0],
+                                        [[0,1],1],
+                                        [[1,0],1],
+                                        [[1,1],1]
+                                    ]
+                            }
+                        ]
+                    },
+                    {
+                        "target": "LacI",
+                        "functions": [
+                            {
+                                "inputVariables": ["LacI","LacI"],
+                                "transitionTable": [
+                                        [[0],0],
+                                        [[1],1],
+                                        [[2],2]
+                                 ]
+                            }
+                        ]
+                    }
+                ],
+
+            "variables": [
+                    {
+                        "id": "CAP",
+			"states": [0,1],
+                        "speed": 1
+                    },
+                    {
+                        "id": "mRNA",
+			"states": [0,1],
+                        "speed": 1
+                    },
+                    {
+                        "id": "LacY",
+			"states": [0,1],
+                        "speed": 1
+                    },
+                    {
+                        "id": "LacZ",
+			"states": [0,1],
+                        "speed": 1
+                    },
+                    {
+                        "id": "LacI",
+			"states": [0,1,2],
+                        "speed": 1
+                    }  
+                ]
+            }
+        ]
+    }
+}

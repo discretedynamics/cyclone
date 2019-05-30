@@ -1,0 +1,234 @@
+{
+    "output": [
+            {
+                "modelName": "my-first-model",
+                "simulationName": "Unmodified",
+		"sizeOfStateSpace": 48,
+                "numberOfCycles": 22,
+
+                "component": [
+                    {
+                        "id": 1,
+                        "size": 8,
+                        "percent": 16.6667,
+                        "dynamics": "Limit Cycle",
+                        "length": 2,
+                        "states": [
+                                     [1,0,1,1,0],
+                                     [1,1,1,1,0]
+                                  ]
+                    },
+		    {
+                        "id": 2,
+                        "size": 5,
+                        "percent": 10.4167,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,1,1,0]
+                                  ]
+                    },
+                    {
+                        "id": 3,
+                        "size": 5,
+                        "percent": 10.4167,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,1,1,2]
+                                  ]
+                    },
+ 		    {
+                        "id": 4,
+                        "size": 5,
+                        "percent": 10.4167,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [1,0,1,1,1]
+                                  ]
+                    },
+ 		    {
+                        "id": 5,
+                        "size": 5,
+                        "percent": 10.4167,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [1,0,1,1,2]
+                                  ]
+                    },
+ 		    {
+                        "id": 6,
+                        "size": 4,
+                        "percent": 8.3333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,1,1,1,0]
+                                  ]
+                    },
+		    {
+                        "id": 7,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,0,1,0]
+                                  ]
+                    },
+		    {
+                        "id": 8,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,0,0,1]
+                                  ]
+                    },
+		    {
+                        "id": 9,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,0,0,2]
+                                  ]
+                    },
+		    {
+                        "id": 10,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,0,1,0]
+                                  ]
+                    },
+		    {
+                        "id": 11,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,0,1,1]
+                                  ]
+                    },
+		    {
+                        "id": 12, 
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,0,1,2]
+                                  ]
+                    },
+		    {
+                        "id": 13,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,1,0,0]
+                                  ]
+                    },
+		    {
+                        "id": 14,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,1,0,1]
+                                  ]
+                    },
+		    {
+                        "id": 15,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,1,0,2]
+                                  ]
+                    },
+		    {
+                        "id": 16,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [0,0,1,1,0]
+                                  ]
+                    },
+		    {
+                        "id": 17,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [1,0,0,0,1]
+                                  ]
+                    },
+		    {
+                        "id": 18,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [1,0,0,0,2]
+                                  ]
+                    },
+		    {
+                        "id": 19,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [1,0,0,1,1]
+                                  ]
+                    },
+		    {
+                        "id": 20,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [1,0,0,1,2]
+                                  ]
+                    },
+		    {
+                        "id": 21,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [1,0,1,0,1]
+                                  ]
+                    },
+		    {
+                        "id": 22,
+                        "size": 1,
+                        "percent": 2.08333,
+                        "dynamics": "STEADY STATE",
+                        "length": 1,
+                        "states": [
+                                     [1,0,1,0,2]
+                                  ]
+                    }		   
+		]
+            }
+        ]
+    }

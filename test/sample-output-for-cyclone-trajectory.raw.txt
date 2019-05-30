@@ -1,0 +1,207 @@
+MODEL NAME: my-first-model
+
+SIMULATION NAME: Unmodified
+
+SIZE OF STATE SPACE: 48
+
+NUMBER OF CYCLES: 22
+
+COMPONENT 1:
+Size = 8(16.6667 %)
+Limit Cycle:
+Length = 2
+States = [ 1 0 1 1 0 ]
+States = [ 1 1 1 1 0 ]
+
+COMPONENT 2:
+Size = 5(10.4167 %)
+Steady State:
+Length = 1
+States = [ 0 0 1 1 1 ]
+
+COMPONENT 3:
+Size = 5(10.4167 %)
+Steady State:
+Length = 1
+States = [ 0 0 1 1 2 ]
+
+COMPONENT 4:
+Size = 5(10.4167 %)
+Steady State:
+Length = 1
+States = [ 1 0 1 1 1 ]
+
+COMPONENT 5:
+Size = 5(10.4167 %)
+Steady State:
+Length = 1
+States = [ 1 0 1 1 2 ]
+
+COMPONENT 6:
+Size = 4(8.33333 %)
+Steady State:
+Length = 1
+States = [ 0 1 1 1 0 ]
+
+COMPONENT 7:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 0 0 0 ]
+
+COMPONENT 8:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 0 0 1 ]
+
+COMPONENT 9:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 0 0 2 ]
+
+COMPONENT 10:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 0 1 0 ]
+
+COMPONENT 11:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 0 1 1 ]
+
+COMPONENT 12:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 0 1 2 ]
+
+COMPONENT 13:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 1 0 0 ]
+
+COMPONENT 14:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 1 0 1 ]
+
+COMPONENT 15:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 1 0 2 ]
+
+COMPONENT 16:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 0 0 1 1 0 ]
+
+COMPONENT 17:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 1 0 0 0 1 ]
+
+COMPONENT 18:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 1 0 0 0 2 ]
+
+COMPONENT 19:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 1 0 0 1 1 ]
+
+COMPONENT 20:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 1 0 0 1 2 ]
+
+COMPONENT 21:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 1 0 1 0 1 ]
+
+COMPONENT 22:
+Size = 1(2.08333 %)
+Steady State:
+Length = 1
+States = [ 1 0 1 0 2 ]
+
+DONE
+<NOTES>
+</NOTES>
+
+MODEL NAME: my-first-model
+
+SIMULATION NAME: Unmodified
+
+NUMBER OF VARIABLES: 5
+
+VARIABLE NAMES: CAP mRNA LacY LacZ LacI 
+
+NUMBER OF STATES: 2 2 2 2 3 
+
+SPEED OF VARIABLES: 1 1 1 1 1 
+
+STATE TRANSITION TABLE for CAP:
+CAP CAP
+0
+1
+
+
+
+STATE TRANSITION TABLE for mRNA:
+CAP LacI mRNA mRNA
+0
+1
+0
+0
+0
+0
+1
+0
+0
+0
+0
+0
+
+
+
+STATE TRANSITION TABLE for LacY:
+mRNA LacY LacY
+0
+1
+1
+1
+
+
+
+STATE TRANSITION TABLE for LacZ:
+mRNA LacZ LacZ
+0
+1
+1
+1
+
+
+
+STATE TRANSITION TABLE for LacI:
+LacI LacI
+0
+1
+2
+
+
+
