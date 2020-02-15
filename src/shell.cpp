@@ -47,6 +47,10 @@ string readInput(string filename)
     {
       cout << "Input File: *" << filename << "* Not Found" << endl;
     }
+  std::cout << "read in file with contents: " << std::endl;
+  std::cout << "########################" << std::endl;
+  std::cout << input << std::endl;
+  std::cout << "########################" << std::endl;
   return input; // this input has the entire string data in the input file
 }
 
@@ -95,10 +99,36 @@ int main(int argc, char * argcv[])
   // No arguments
   if (argc == 1)
     {
-      cout << "Enter input filename: " << endl;
-      cin >> filename;
+      // cout << "Enter input filename: " << endl;
+      // cin >> filename;
 
-      promptUser(tables, pds);
+      // promptUser(tables, pds);
+
+      std::cout << "cyclone <file> args..." << std::endl;
+      std::cout << "  actions" << std::endl;
+      std::cout << "    -edges                                   compute edges (meaning what?)" << std::endl;
+      std::cout << "    -tra <file>                              compute trajectory or random trajectory" << std::endl;
+      std::cout << "    -multitraj <#trajectories:int> <file1> .. <filen>" << std::endl;
+      std::cout << "                                             multi-XX trajectory" << std::endl;
+      std::cout << "    (none specified)                         do the main thing (which is...?)" << std::endl;
+      std::cout << "  arguments:" << std::endl;
+      std::cout << "    -v                    verbose output (meaning what?)" << std::endl;
+      std::cout << "    -random <int> <int>   random update" << std::endl;
+      std::cout << "    -r <int> <int>        same" << std::endl;
+      std::cout << "    -c <int>              number of cores to use" << std::endl;
+      std::cout << "    -f <filename1> ... <filenamen>  output file(s).  Must come after action" << std::endl;
+      std::cout << "    -it                   include the input tables in the output" << std::endl;
+      std::cout << "    -PDS                  input is in polynomial format" << std::endl;
+      std::cout << "  help" << std::endl;
+      std::cout << "    -help format          the format of the input file (not yet written)" << std::endl;
+      std::cout << "\
+  The main activity of cyclone is to iterate over the state space of a graph input\n\
+  into it as either a system of polynomial equations or a series of\n\
+  tables. This iteration then produces all limit cycles in the state\n\
+  space and outputs these, along with the percentage of the state\n\
+  space which is a part of each component of the graph." << std::endl;
+      
+      return 0;
     }
   // One or more arguments in addition to filename
   else
@@ -258,6 +288,7 @@ int main(int argc, char * argcv[])
             }
           else
             {
+              std::cout << "Step A" << std::endl;
               cyc->run(writeFile, outputFile, 1, verbose, includeTables);
             }
         }
