@@ -148,7 +148,7 @@ void Cyclone::readTableInput(string filename)
       input[input.length() - 1] = '\0';
       parseTableInput(input);
 
-      delete temp;
+      delete[] temp;
     }
   else
     {
@@ -348,7 +348,7 @@ void Cyclone::readInput(string filename)
       input[input.length() - 1] = '\0';
       parseInput(input);
 
-      delete temp;
+      delete[] temp;
     }
   else
     {
@@ -422,7 +422,7 @@ void Cyclone::printState(unlong curState)
       //cout << " " << (int) temp[i];
     }
   //cout << " ]" << endl;
-  delete temp;
+  delete[] temp;
 }
 
 // PRE: PDSs are defined
@@ -682,8 +682,8 @@ void Cyclone::subprocessRun(int childNum, int numProcesses,
       *((int *) (mSHMptr + iterState)) = result;
     }
 
-  delete ternCurState;
-  delete ternNextState;
+  delete[] ternCurState;
+  delete[] ternNextState;
 
 }
 
@@ -791,8 +791,8 @@ void Cyclone::subprocessRunWithSpeeds(int childNum, int numProcesses,
       *((int *) (mSHMptr + iterState)) = result;
     }
 
-  delete ternState;
-  delete ternNextState;
+  delete[] ternState;
+  delete[] ternNextState;
 
 }
 
@@ -1281,7 +1281,7 @@ void Cyclone::outputCycle(vector<unlong> & cycle)
     }
 
   outBuffer.push_back(output.str());
-  delete temp;
+  delete[] temp;
 }
 
 // PRE: cycle is a vector consisting of all the states in the cycle
@@ -1316,7 +1316,7 @@ void Cyclone::outputCycle(vector<unlong> & path, int indexOfPath)
     }
 
   outBuffer.push_back(output.str());
-  delete temp;
+  delete[] temp;
 }
 
 // PRE: outBuffers are filled with the limit cycles and component
@@ -1501,7 +1501,7 @@ void Cyclone::generateEdges(bool writeFile, string filename, bool pverbose,
       cout << "}" << std::endl;
     }
 
- delete CurrentState;
+ delete[] CurrentState;
 }
 
 // PRE: writeFile, maxState, edges, and filename are all defined.
@@ -1591,7 +1591,7 @@ void Cyclone::readTrajectory(ifstream& inFile, uchar trajectory[])
           leadingIndex++;
         }
     }
-  delete inputLine;
+  delete[] inputLine;
 }
 
 // PRE: path is defined and empty, trajStart is defined and filled
@@ -1634,9 +1634,8 @@ int Cyclone::runTrajectory(vector<unlong> * path, uchar trajStart[])
                                    knockouts);
           cycleStart = getCycle(path, curState);
         }
-      delete ternCurState;
-      delete ternNextState;
-
+      delete[] ternCurState;
+      delete[] ternNextState;
     }
 
   // using speeds
@@ -1734,7 +1733,7 @@ void Cyclone::runRandomUpdateTrajectory(vector<unlong> * path,
     }
   path->push_back(curState);
 
-  delete ternCurState;
+  delete[] ternCurState;
 }
 
 // PRE: path and state are defined.
