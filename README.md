@@ -43,5 +43,3 @@ adam.pl is calling perl scripts, ruby, or Macaulay2 scripts to analyze a given m
 * snoopy.rb - uses M2 code in indicatorFunc.rb
 * transitionTables.rb - convert one transition table to a polynomials, uses indicatorFunc.m2
 * transitionTablesContinuous.rb convert one transition table to a continuous polynomials, uses indicatorFunc.m2
-
-
