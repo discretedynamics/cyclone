@@ -598,10 +598,11 @@ void Cyclone::fillEdgeArray(int cores)
         }
     }
   // Wait for all processes to finish before continuing
-  for (int i = 0; i < cores; i++)
-    {
-      waitfor(children[i]);
-    }
+  if (cores > 1) // added MS+BS: waitfor seems to not work with 1 process...
+    for (int i = 0; i < cores; i++)
+        {
+            waitfor(children[i]);
+        }
 }
 // PRE: cores is defined as the number of subprocesses to make. PDSs
 // or Tables are defined and ready to be used. SHM is initialized to
