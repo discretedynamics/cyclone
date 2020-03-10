@@ -1,0 +1,109 @@
+MODEL NAME: YM_Bool_Model
+SIMULATION NAME: full
+NUMBER OF VARIABLES: 8
+VARIABLE NAMES: M B Ob Tb A Da L Hl
+NUMBER OF STATES: 2 2 2 2 2 2 2 2
+SPEED OF VARIABLES: 1 1 1 1 1 1 1 1
+
+STATE TRANSITION TABLE for M:
+A M
+0
+1
+
+
+STATE TRANSITION TABLE for B:
+M B Tb B
+0
+0
+1
+0
+1
+1
+1
+1
+
+
+STATE TRANSITION TABLE for Ob:
+M B Ob
+0
+1
+0
+0
+
+
+STATE TRANSITION TABLE for Tb:
+M Ob Tb
+0
+1
+0
+0
+
+
+STATE TRANSITION TABLE for A:
+B A Da L Hl A
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+0
+1
+1
+1
+1
+1
+0
+1
+1
+1
+0
+1
+1
+1
+0
+1
+1
+1
+0
+1
+1
+1
+
+
+STATE TRANSITION TABLE for Da:
+B A L Hl Da
+0
+0
+0
+0
+1
+0
+1
+0
+0
+0
+0
+0
+1
+0
+0
+0
+
+
+STATE TRANSITION TABLE for L:
+L L
+0
+1
+
+
+STATE TRANSITION TABLE for Hl:
+Hl Hl
+0
+1
+
+

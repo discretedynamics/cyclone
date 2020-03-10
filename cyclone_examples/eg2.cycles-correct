@@ -1,0 +1,22 @@
+MODEL NAME: eg2
+
+SIMULATION NAME: eg2
+
+SIZE OF STATE SPACE: 8
+
+NUMBER OF CYCLES: 1
+
+COMPONENT 1:
+Size = 8(100.000 %)
+Limit Cycle:
+Length = 5
+States = [ 0 0 0 ]
+States = [ 1 0 0 ]
+States = [ 1 1 0 ]
+States = [ 0 1 1 ]
+States = [ 0 1 0 ]
+
+DONE
+<NOTES>
+</NOTES>
+

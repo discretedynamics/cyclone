@@ -1,0 +1,21 @@
+MODEL NAME: sook_model
+
+SIMULATION NAME: sim1
+
+SIZE OF STATE SPACE: 4
+
+NUMBER OF CYCLES: 1
+
+COMPONENT 1:
+Size = 4(100.000 %)
+Limit Cycle:
+Length = 4
+States = [ 0 0 ]
+States = [ 1 0 ]
+States = [ 1 1 ]
+States = [ 0 1 ]
+
+DONE
+<NOTES>
+</NOTES>
+

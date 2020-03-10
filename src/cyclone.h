@@ -285,7 +285,7 @@ void  trajNextStateWithSpeeds(const unlong curState, uchar * ternState[], uchar 
   int mSHMId;
   int * mSHMptr;
 
-  unlong * associations;
+  unlong * associations; // an array of length total_states+1.
 
   vector<PDS> * pds; // vector of polynomial equations for each variable
 

@@ -1,0 +1,42 @@
+MODEL NAME: YM_Bool_Model
+
+SIMULATION NAME: full
+
+SIZE OF STATE SPACE: 256
+
+NUMBER OF CYCLES: 5
+
+COMPONENT 1:
+Size = 64(25.0000 %)
+Limit Cycle:
+Length = 1
+States = [ 0 0 0 0 0 0 0 0 ]
+
+COMPONENT 2:
+Size = 64(25.0000 %)
+Limit Cycle:
+Length = 1
+States = [ 1 1 0 0 1 0 0 1 ]
+
+COMPONENT 3:
+Size = 64(25.0000 %)
+Limit Cycle:
+Length = 1
+States = [ 1 1 0 0 1 0 1 1 ]
+
+COMPONENT 4:
+Size = 56(21.8750 %)
+Limit Cycle:
+Length = 1
+States = [ 1 1 0 0 1 0 1 0 ]
+
+COMPONENT 5:
+Size = 8(3.12500 %)
+Limit Cycle:
+Length = 1
+States = [ 0 0 0 0 0 0 1 0 ]
+
+DONE
+<NOTES>
+</NOTES>
+
