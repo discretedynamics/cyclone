@@ -28,7 +28,7 @@ class Cyclone
 		@update_rules = @parsed["updateRules"]
 		for i in 0...@update_rules.length()
 			@target = @update_rules[i]["target"]
-			@state_transition_tables += "STATE TRASITION TABLE for " + @target + ":\n"
+			@state_transition_tables += "STATE TRANSITION TABLE for " + @target + ":\n"
 			@input_variables = @update_rules[i]["functions"][0]["inputVariables"]
 			@state_transition_tables += @input_variables.join(" ") + " " + @input_variables[@input_variables.length - 1]
 			@state_transition_tables += "\n"

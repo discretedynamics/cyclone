@@ -107,7 +107,7 @@ int main(int argc, char * argcv[])
       std::cout << "cyclone <file> args..." << std::endl;
       std::cout << "  actions" << std::endl;
       std::cout << "    -edges                                   compute edges (meaning what?)" << std::endl;
-      std::cout << "    -tra <file>                              compute trajectory or random trajectory" << std::endl;
+      std::cout << "    -traj <file>                              compute trajectory or random trajectory" << std::endl;
       std::cout << "    -multitraj <#trajectories:int> <file1> .. <filen>" << std::endl;
       std::cout << "                                             multi-XX trajectory" << std::endl;
       std::cout << "    (none specified)                         do the main thing (which is...?)" << std::endl;

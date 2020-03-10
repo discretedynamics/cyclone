@@ -1,0 +1,13 @@
+MODEL NAME: eqn2.56
+SIMULATION NAME: full
+NUMBER OF VARIABLES: 6
+VARIABLE NAMES: M B O A Ll Lh
+NUMBER OF STATES: 2 2 2 2 2 2
+SPEED OF VARIABLES: 1 1 1 1 1 1
+
+f1 = A
+f2 = M + (B*(O+1)) + M*B*(O+1)
+f3 = (M+1)*B
+f4 = (B*Ll + H + B*Ll*Lh)
+f5 = Ll
+f6 = Lh

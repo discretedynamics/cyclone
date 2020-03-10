@@ -1,0 +1,5 @@
+eqn2_55 has variable names that with more than one letter: the first letter is capitalized and the second is lowercase
+
+eqn2_61 has functions indexed with letters instead of numbers: fm instead of f1, for example
+
+the rest are straightforward examples
