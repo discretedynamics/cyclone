@@ -217,13 +217,22 @@ int main(int argc, char * argcv[])
 
   // Run cyclone
   string input = readInput(filename);
+  std::cout << "filename      = " << filename << std::endl;
+  std::cout << "pds           = " << pds << std::endl;
+  std::cout << "tables        = " << tables << std::endl;
+  std::cout << "edges         = " << edges << std::endl;
+  std::cout << "writeFile     = " << writeFile << std::endl;
+  std::cout << "verbose       = " << verbose << std::endl;
+  std::cout << "includeTables = " << includeTables << std::endl;
   if (input.length() > 0)
     {
 
       Cyclone * cyc = new Cyclone(filename, tables);
       if (edges)
         {
+          std::cout << "Computing state space" << std::endl;
           cyc->generateEdges(writeFile, outputFile, verbose, includeTables);
+          std::cout << "  Done computing state space" << std::endl;
         }
       else if (traj)
         {
@@ -288,8 +297,9 @@ int main(int argc, char * argcv[])
             }
           else
             {
-              std::cout << "Step A" << std::endl;
+              std::cout << "Computing limit points and cycles" << std::endl;
               cyc->run(writeFile, outputFile, 1, verbose, includeTables);
+              std::cout << "  done computing limit points and cycles" << std::endl;
             }
         }
 
