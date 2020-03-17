@@ -186,7 +186,6 @@ void Cyclone::parseTableInput(string& input)
 
   // Read the states transition table data for each variable (node) and construct 
   // a Table for the variable and push the Table to the array of tables "tables"
-  Table * temp;
   for (int i = 0; i < num_vars; i++) {
       tables->push_back(
           Table(input.substr(breakPoints[i], breakPoints[i + 1]-breakPoints[i]), 
@@ -288,7 +287,6 @@ string Cyclone::parseHeader(string& input)
     if (input.substr(1, 15).compare("VARIABLE NAMES:") == 0) {
         varNamesVector = new vector<string>; 
         stringstream stream (input.substr(17, newline-16));
-        int i=0;
         string name;
         while (stream >> name) {
             varNamesVector->push_back(name);
@@ -482,10 +480,13 @@ void Cyclone::initializeSHM(unlong size)
   mSHMKey = getpid();
 
   // Create segment
+  std::cout << "initializeSHM: allocating " << size * BYTES_PER_INT << " bytes" << std::endl;
   if ((mSHMId = shmget(mSHMKey, size * BYTES_PER_INT, IPC_CREAT | IPC_EXCL | 0666)) < 0)
     {
+      std::cout << "shmget errno = " << strerror(errno) << std::endl;
       if ((mSHMId = shmget(mSHMKey, size * BYTES_PER_INT, IPC_CREAT | 0666)) < 0)
         {
+          std::cout << "shmget errno2 = " << strerror(errno) << std::endl;
           cerr << "shmget error: " << mSHMKey << endl;
           exit(1);
         }
@@ -496,6 +497,7 @@ void Cyclone::initializeSHM(unlong size)
 
       if ((mSHMId = shmget(mSHMKey, size * BYTES_PER_INT, IPC_CREAT | 0666)) < 0)
         {
+          std::cout << "shmget errno3 = " << strerror(errno) << std::endl;
           cerr << "shmget error: " << mSHMKey << endl;
           exit(1);
         }
@@ -504,6 +506,7 @@ void Cyclone::initializeSHM(unlong size)
   // Get the pointer to the start of the block
   if ((mSHMptr = (int *) shmat(mSHMId, 0, 0)) == (int *) -1)
     {
+      std::cout << "shmget errno4 = " << strerror(errno) << std::endl;
       cerr << "shmat";
       exit(1);
     }
@@ -621,7 +624,7 @@ void Cyclone::run(int cores)
     }
   associations[total_states] = 0;
 
-  unlong cycleCount = makeTrajectories(total_states);
+  makeTrajectories(total_states);
   delete checkedArray;
   delete associations;
 }
@@ -639,8 +642,6 @@ void Cyclone::subprocessRun(int childNum, int numProcesses,
 {
 
   // initialize variables for the run
-  unlong curState = 0;
-  unlong prevState = 0;
   uchar * ternCurState = new uchar[num_vars];
   uchar * ternNextState = new uchar[num_vars];
 
@@ -702,8 +703,6 @@ void Cyclone::subprocessRunWithSpeeds(int childNum, int numProcesses,
 {
 
   // initialize variables for the run
-  unlong curState = 0;
-  unlong prevState = 0;
   uchar ** ternState = new uchar*[numUpdateSpeeds];
   uchar * ternNextState = new uchar[num_vars];
 
@@ -1720,7 +1719,6 @@ void Cyclone::runRandomUpdateTrajectory(vector<unlong> * path,
     }
   startState = ternaryToDecimal(num_vars, startWithKOsRemoved, numStates);
   unlong curState = startState;
-  int cycleStart = -1;
 
   // run until a cycle is found
   uchar * ternCurState = new uchar[num_vars];

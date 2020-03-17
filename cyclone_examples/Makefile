@@ -20,7 +20,7 @@
 	../cyclone $< -f $@
 
 clean:
-	rm -rf *.dot *.cycles *.tables
+	rm -rf *.dot *.cycles *.tables *-all
 
 # todo: get trajectories working
 # %-output-traj: %-cyclone-input %-input-traj

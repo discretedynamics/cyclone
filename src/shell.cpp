@@ -92,7 +92,6 @@ int main(int argc, char * argcv[])
   bool multitraj = false;
   bool randomUpdate = false;
   bool includeTables = false;
-  int state_check;
   char ** multitrajFiles;
   char ** multitrajOutfiles;
 

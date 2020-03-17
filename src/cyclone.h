@@ -311,10 +311,6 @@ void  trajNextStateWithSpeeds(const unlong curState, uchar * ternState[], uchar 
  
   string modelname, runname;
   
-  string * varNames;
-  
-  string * nodeNames;
-  
   vector<string> * varNamesVector;
 
   int * varSpeeds; // speed-by-variable
