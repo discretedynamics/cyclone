@@ -1,39 +1,24 @@
 #include <string>
 #include <vector>
 
-class State
-{
-  long indexOfState();
-};
-
-class Table
-{
-};
+#include "State.hpp"
+#include "Polynomial.hpp"
 
 /// Class of a FDS which is given by polynomials
 class PolynomialFDS
 {
 private:
+  int mNumStates; // per variable, all the same.
+  int mTotalNumStates; // mNumStates^#vars
   std::vector<std::string> mVariableNames;
-  std::vector<Polynomial> mPolynomials;
+  std::vector<Polynomial*> mPolynomials;
 public:
   State evaluate(State u);
 };
 
-/// Class of a FDS which is given by transition tables
-class TableFDS
-{
-private:
-  std::vector<std::string> mVariableNames;
-  std::vector<Table> mTables;
-public:
-  void evaluate(State u, State result);
-};
+PDS readPDS(std::string filename); // TODO: to be written
 
-Table readTable(std::string filename);
-PDS readPDS(std::string filename);
-
-std::vector<long> computeStateSpace(const TableFDS& FDS)
+std::vector<long> computeStateSpace(const PolynomialFDS& FDS)
 {
   std::vector<long> stateSpace;
   stateSpace.reserve(FDS.numStates()); // set length to FDS.numStates()

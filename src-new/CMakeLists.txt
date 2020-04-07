@@ -17,7 +17,11 @@ project(simFDS
   )
 
 set(SOURCES
+  State.hpp
   Polynomial.hpp
+  Polynomial.cpp
+  PolynomialFDS.hpp
+  PolynomialFDS.cpp
   main.cpp
   )
 
