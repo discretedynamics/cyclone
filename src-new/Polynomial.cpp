@@ -154,7 +154,7 @@ int Polynomial::evaluate(const int pt[]) {
   return mEvaluationValues[mResultLocation];
 }
 
-std::string Polynomial::evaluateSymbolic() {
+std::string Polynomial::evaluateSymbolic(const std::vector<std::string>& varnames) {
   // ASSUME: pt is a pointer to an array 0..numvars-1 of values in the range 0..numConstants-1
   // evaluate at a point
   // 1. fill in the n variables values in the array 'mEvaluationValues'.
@@ -162,7 +162,7 @@ std::string Polynomial::evaluateSymbolic() {
   for (int i=0; i < mNumStates; ++i)
     strs.push_back(std::to_string(i));
   for (int i=0; i<mNumVariables; i++)
-    strs.push_back("x" + std::to_string(i));
+    strs.push_back(varnames[i]); // previously: "x" + std::to_string(i));
   for (int i = mFirstOperation; i <= mResultLocation; i++)
     {
       operand& a = mOperands[i-mFirstOperation];

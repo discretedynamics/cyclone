@@ -81,7 +81,7 @@ public:
   int exp(int base, int exponent);
   int createPowerNode(int first_loc, int exponent);
   int evaluate(const int pt[]);
-  std::string evaluateSymbolic();
+  std::string evaluateSymbolic(const std::vector<std::string>& varnames);
   
   //  static Polynomial parse(const std::string& input_string, const std::vector<std::string>& var_names);
 };

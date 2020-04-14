@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "State.hpp"
 #include "Polynomial.hpp"
@@ -43,8 +44,16 @@ public:
   int totalNumStates() const { return mTotalNumStates; }
 
   void evaluate(const int u[], int output[]);
+
+  void display(std::ostream& o);
 };
 
+inline std::ostream& operator<<(std::ostream& o, PolynomialFDS f)
+{
+  f.display(o);
+  return o;
+}
+  
 PolynomialFDS readPDS(std::string filename); // TODO: to be written
 
 std::vector<long> computeStateSpace(PolynomialFDS& FDS);

@@ -4,14 +4,42 @@
 class State
 {
   int mNumStates;
-  std::vector<int> mState;
+  std::vector<int> mState; // 0..numvars-1
 public:
-  State(int numstates, int numvars); // will create a zero State.
+  State(int numstates, int numvars) // create a zero State.
+    : mNumStates(numstates),
+      mState(numvars, 0)
+  {
+    // require that numvars >= 1.
+    // require that mNumStates >= 2.
+  }
   
   int* getState() { return mState.data(); }
-  void setFromIndex(long index);
 
-  long getIndex() const;
+  void setFromIndex(long index)
+  {
+    for (int i = mState.size() - 1; i >= 0; i--)
+      {
+        mState[i] = index % mNumStates;
+        index /= mNumStates;
+      }
+  }
+  // 3-ary (mNumStates = 3), numvars = 4. index can be in range 0..3^4
+  // index = 17.  What state is this?
+  // state[3] = 17%3 = 2.  Now set index = 17/3 = 5
+  // state[2] = 5%3 = 2.  Now we set index = 5/3 = 1
+  // state[1] = 1%3 = 1.  index = 1/3 = 0
+  // state[0] = 0%3 = 0
+  // index == state[3]*1 + state[2]*3 + state[1]*3^2 + state[0]*3^3
+  // 17 in base 3 is: 0122 = 1*3^2 + 2*3 + 2*1
+
+  long getIndex() const
+  {
+    long result = mState[0];
+    for (int i=1; i < mState.size(); i++)
+      result = (result * mNumStates) + mState[i];
+    return result;
+  }
 };
 
 #endif
