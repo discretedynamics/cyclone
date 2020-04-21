@@ -76,6 +76,8 @@ public:
   
   std::ostream& debug_display(std::ostream& o) const;
 
+  int constantNode(int a);
+  int variableNode(int var);
   int createPlusNode(int first_loc, int second_loc);
   int createTimesNode(int first_loc, int second_loc);
   int exp(int base, int exponent);
@@ -85,6 +87,9 @@ public:
   
   //  static Polynomial parse(const std::string& input_string, const std::vector<std::string>& var_names);
 };
+
+Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, std::string& str);
+
 
 #endif
 

@@ -1,5 +1,11 @@
 #include "Polynomial.hpp"
 
+#include <string>
+#include <algorithm>
+#include <cctype>
+#include <iterator>
+#include <iostream>
+
 Polynomial::Polynomial(int numstates, int numvars)
   : mNumStates(numstates),
     mNumVariables(numvars),
@@ -43,7 +49,18 @@ std::ostream& Polynomial::debug_display(std::ostream& o) const
     }
   return o;
 }
-  
+
+int Polynomial::constantNode(int a)
+{
+  return(a % mNumStates);
+}
+
+int Polynomial::variableNode(int var)
+{
+  // TODO: check that var is in range?
+  return mNumStates + var;
+}
+
 int Polynomial::createPlusNode(int first_loc, int second_loc)
 {
   mResultLocation = mEvaluationValues.size();
@@ -181,6 +198,112 @@ std::string Polynomial::evaluateSymbolic(const std::vector<std::string>& varname
   return strs[mResultLocation];
 }
 
+class PolynomialParser
+{
+private:
+  Polynomial mResult;
+  std::string mString;
+  const std::vector<std::string>& mVarNames;
+private:
+  // parse str[begin]..str[end-1].
+  int parsePoly(int begin, int end)
+  {
+    int level = 0;
+    // if the top level has a '+', break it at the plus:
+    for (int i=end-1; i>=0; --i) {
+        char c = mString[i];
+        if (c == ')') {
+          ++level;
+          continue;
+        }
+        if (c == '(') {
+          --level;
+          if (level < 0)
+            throw("parentheses mismatch");
+          continue;
+        }
+        if (level > 0) continue;
+        if (c == '+') {
+          if (i == 0)
+            return parsePoly(1, end);
+          else {
+            int left = parsePoly(0,i);
+            int right = parsePoly(i+1,end);
+            return mResult.createPlusNode(left, right);
+          }
+        }
+    }
+    if (level != 0) throw("oops");
+    // if the top level has a '*', break it at the *:
+    for (int i=end-1; i>=0; --i) {
+        char c = mString[i];
+        if (c == ')') {
+          ++level;
+          continue;
+        }
+        if (c == '(') {
+          --level;
+          if (level < 0)
+            throw("parentheses mismatch");
+          continue;
+        }
+        if (level > 0) continue;
+        if (c == '*') {
+          if (i == 0 or i == end-1)
+            throw("* needs two expressions");
+          else {
+            int left = parsePoly(0,i);
+            int right = parsePoly(i+1,end);
+            return mResult.createTimesNode(left, right);
+          }
+        }
+    }
+    if (level != 0) throw("oops");
+
+    if (mString[begin] == '(') {
+      if (mString[end-1] != ')')
+        throw("mismatched parentheses");
+      return parsePoly(begin+1, end-1);
+    }
+
+    // check for the string being a number
+    if (isdigit(mString[begin])) {
+      int a = parseInteger(mString.substr(begin, end));
+      return mResult.constantNode(a);
+    }
+    // check for the string being a variable name
+    auto pos = std::find(mVarNames.begin(), mVarNames.end(), mString.substr(begin, end));
+    if (pos == mVarNames.end())
+      throw("expected a variable name starting at position " + std::to_string(begin));
+    return mResult.variableNode(pos-mVarNames.end());
+  }
+public:
+  PolynomialParser(const std::vector<std::string>& varnames,
+                   int numstates,
+                   const std::string& str)
+    : mResult(numstates, varnames.size()),
+      mString(str),
+      mVarNames(varnames)
+  {
+    // Step 1: remove spaces. TODO: check this.
+    string::erase(std::remove_if(mString.begin(),
+                              mString.end(),
+                              ::isspace),
+               mString.end());
+  }
+
+  Polynomial value()
+  {
+    parsePoly(0, mString.size());
+    return mResult;
+  }
+};
+
+Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, std::string& str)
+{
+  PolynomialParser P(varnames, numstates, str);
+  return P.value();
+}
 // Local Variables:
 // compile-command: "make "
 // indent-tabs-mode: nil
