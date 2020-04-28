@@ -88,7 +88,7 @@ public:
   //  static Polynomial parse(const std::string& input_string, const std::vector<std::string>& var_names);
 };
 
-Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, std::string& str);
+Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, const std::string& str);
 
 
 #endif

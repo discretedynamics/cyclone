@@ -2,7 +2,6 @@
 
 #include <string>
 #include <algorithm>
-#include <cctype>
 #include <iterator>
 #include <iostream>
 
@@ -68,7 +67,7 @@ int Polynomial::createPlusNode(int first_loc, int second_loc)
     {
       // evaluate now, because they are constants
       int val = first_loc + second_loc;
-      if (val > mNumStates) val -= mNumStates;
+      if (val >= mNumStates) val -= mNumStates;
       mResultLocation = val;
     }
   else if (first_loc == 0)
@@ -121,17 +120,25 @@ int Polynomial::exp(int base, int exponent)
 int Polynomial::createPowerNode(int first_loc, int exponent)
 {
   // NOTE: 0^0 = 0 by convention
+  // x^mNumStates == x (mod mNumStates)
+  // if mNumStates == 3, say
+  //   x^2 == 1 (unless x == 0)
+  if (exponent != 0)
+    {
+      exponent = exponent % (mNumStates-1); // Check this!
+      if (exponent == 0) exponent += (mNumStates-1);
+    }
   mResultLocation = mEvaluationValues.size();
-  if (isConstantLocation(first_loc))
+  if (first_loc == 0) // 0^anything is 0
+    mResultLocation = 0;
+  else if (first_loc == 1) // 1^anything is 1
+    mResultLocation = 1;
+  else if (isConstantLocation(first_loc))
     {
       // evaluate now, because they are constants
       mResultLocation = exp(first_loc, exponent);
     }
-  else if (first_loc == 0)
-    mResultLocation = 0;
   else if (exponent == 0)
-    mResultLocation = 1;
-  else if (first_loc == 1)
     mResultLocation = 1;
   else if (exponent == 1)
     mResultLocation = first_loc;
@@ -198,6 +205,44 @@ std::string Polynomial::evaluateSymbolic(const std::vector<std::string>& varname
   return strs[mResultLocation];
 }
 
+// helper function for parsePoly
+int findLocation(const std::string& str, int begin, int end, char op)
+{
+  int level = 0;
+  for (int i=end-1; i>=begin; --i) {
+    char c = str[i];
+    if (c == ')') {
+      ++level;
+      continue;
+    }
+    if (c == '(') {
+      --level;
+      if (level < 0)
+        throw("parentheses mismatch");
+      continue;
+    }
+    if (level > 0) continue;
+    if (c == op)
+      return i;
+  }
+  if (level > 0) throw("parentheses mismatch");
+  return end;
+}
+
+int parseNumber(const std::string &str, int begin, int end)
+{  
+  if (isdigit(str[begin])) {
+    //    std::cout << "found number at: " << begin << " and " << end << std::endl;
+    size_t lastloc;
+    std::string s { str.substr(begin, end-begin) };
+    int a = std::stoi(s, &lastloc, 10); // Not correct yet:  "23(a+b)" return val will be 2
+    if (lastloc != end-begin)
+      throw("expected the entire string " + s + " to be a number");
+    return a;
+  }
+  return 0;
+}
+
 class PolynomialParser
 {
 private:
@@ -208,74 +253,58 @@ private:
   // parse str[begin]..str[end-1].
   int parsePoly(int begin, int end)
   {
-    int level = 0;
     // if the top level has a '+', break it at the plus:
-    for (int i=end-1; i>=0; --i) {
-        char c = mString[i];
-        if (c == ')') {
-          ++level;
-          continue;
-        }
-        if (c == '(') {
-          --level;
-          if (level < 0)
-            throw("parentheses mismatch");
-          continue;
-        }
-        if (level > 0) continue;
-        if (c == '+') {
-          if (i == 0)
-            return parsePoly(1, end);
-          else {
-            int left = parsePoly(0,i);
-            int right = parsePoly(i+1,end);
-            return mResult.createPlusNode(left, right);
-          }
-        }
+    int i = findLocation(mString, begin, end, '+');
+    if (i < end) {
+      //      std::cout << "found + at: " << i << std::endl;
+      if (i == end-1)
+        throw("+ needs two expressions");
+      if (i == begin) return parsePoly(begin+1, end);
+      int left = parsePoly(begin,i);
+      int right = parsePoly(i+1,end);
+      return mResult.createPlusNode(left, right);
     }
-    if (level != 0) throw("oops");
-    // if the top level has a '*', break it at the *:
-    for (int i=end-1; i>=0; --i) {
-        char c = mString[i];
-        if (c == ')') {
-          ++level;
-          continue;
-        }
-        if (c == '(') {
-          --level;
-          if (level < 0)
-            throw("parentheses mismatch");
-          continue;
-        }
-        if (level > 0) continue;
-        if (c == '*') {
-          if (i == 0 or i == end-1)
-            throw("* needs two expressions");
-          else {
-            int left = parsePoly(0,i);
-            int right = parsePoly(i+1,end);
-            return mResult.createTimesNode(left, right);
-          }
-        }
+
+    i = findLocation(mString, begin, end, '*');
+    if (i < end) {
+      //      std::cout << "found * at: " << i << std::endl;
+      if (i == begin or i == end-1)
+        throw("* needs two expressions");
+      int left = parsePoly(begin,i);
+      int right = parsePoly(i+1,end);
+      return mResult.createTimesNode(left, right);
     }
-    if (level != 0) throw("oops");
+
+    i = findLocation(mString, begin, end, '^');
+    if (i < end) {
+      //      std::cout << "found ^ at: " << i << std::endl;
+      if (i == begin or i == end-1)
+        throw("^ needs two expressions");
+      int left = parsePoly(begin,i);
+      int exp = parseNumber(mString, i+1, end);
+      return mResult.createPowerNode(left, exp);
+    }
 
     if (mString[begin] == '(') {
       if (mString[end-1] != ')')
         throw("mismatched parentheses");
+      //      std::cout << "found parens at: " << begin << " and " << end << std::endl;      
       return parsePoly(begin+1, end-1);
     }
 
     // check for the string being a number
     if (isdigit(mString[begin])) {
-      int a = parseInteger(mString.substr(begin, end));
-      return mResult.constantNode(a);
+      int a = parseNumber(mString, begin, end);
+      return mResult.constantNode(a);      
     }
+
     // check for the string being a variable name
-    auto pos = std::find(mVarNames.begin(), mVarNames.end(), mString.substr(begin, end));
+    //    std::cout << "looking for identifier: in " << mString.substr(begin, end-begin) << " at: [" << begin << ", " << end << ")" << std::endl;
+    auto pos = std::find(mVarNames.begin(), mVarNames.end(), mString.substr(begin, end-begin));
     if (pos == mVarNames.end())
       throw("expected a variable name starting at position " + std::to_string(begin));
-    return mResult.variableNode(pos-mVarNames.end());
+    //    std::cout << "found identifier: " << pos-mVarNames.begin() << " at: " << begin << " and " << end << std::endl;
+    return mResult.variableNode(pos-mVarNames.begin());
   }
 public:
   PolynomialParser(const std::vector<std::string>& varnames,
@@ -285,21 +314,30 @@ public:
       mString(str),
       mVarNames(varnames)
   {
-    // Step 1: remove spaces. TODO: check this.
-    string::erase(std::remove_if(mString.begin(),
-                              mString.end(),
-                              ::isspace),
-               mString.end());
+    // Step 1: remove spaces.
+    //    std::cout << "string before removing spaces: ." << mString << "." << std::endl;
+    mString.erase(std::remove_if(mString.begin(),
+                                 mString.end(),
+                                 [](unsigned char x) { return std::isspace(x); }
+                                 ),
+                  mString.end());
+    std::cout << "string after removing spaces: ." << mString << "." << std::endl;
   }
 
   Polynomial value()
   {
-    parsePoly(0, mString.size());
+    try {
+      parsePoly(0, mString.size());
+    }
+    catch (const std::string& excep) {
+      std::cout << "exception: " << excep << std::endl;
+    }
+      
     return mResult;
   }
 };
 
-Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, std::string& str)
+Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, const std::string& str)
 {
   PolynomialParser P(varnames, numstates, str);
   return P.value();

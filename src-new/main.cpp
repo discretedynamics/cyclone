@@ -70,7 +70,29 @@ Polynomial examplePoly3()
 
 int main(int argc, char** argv)
 {
-  Polynomial f = examplePoly1();
+  std::vector<std::string> varnames = { "x3", "x", "P53" };
+  Polynomial f = parsePolynomial(varnames, 3, "x3 + P53*( 1 + x)");
+  std::cout << f.evaluateSymbolic(varnames) << std::endl;
+
+  varnames = { "x3", "x", "P53", "AB_3", "AB_1", "AB4" };
+  f = parsePolynomial(varnames, 3, "x3 + P53*( 1 + x)^ 5*  AB_3");
+  std::cout << f.evaluateSymbolic(varnames) << std::endl;
+
+  varnames = { "x3", "x", "P53", "AB_3", "AB_1", "AB4" };
+  f = parsePolynomial(varnames, 3, "x3 + P53*( 1 + x)^ 4*  AB_3");
+  std::cout << f.evaluateSymbolic(varnames) << std::endl;
+
+  f = parsePolynomial(varnames, 3, "x3 + x^3 + (2+1)*P53 + AB_3^6");
+  std::cout << f.evaluateSymbolic(varnames) << std::endl;
+
+  f = parsePolynomial(varnames, 5, "x3 + x^3 + (2+1)*P53 + AB_3^6");
+  std::cout << f.evaluateSymbolic(varnames) << std::endl;
+  
+
+
+  return 0;
+  
+  f = examplePoly1();
   int pt[4] {0,1,1,2};
   std::cout << "f(0,1,1,2) = " << f.evaluate(pt) << std::endl;
   std::cout << f.evaluateSymbolic({"x1","x3","x5","x7"}) << std::endl;
