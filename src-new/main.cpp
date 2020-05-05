@@ -87,7 +87,10 @@ int main(int argc, char** argv)
 
   f = parsePolynomial(varnames, 5, "x3 + x^3 + (2+1)*P53 + AB_3^6");
   std::cout << f.evaluateSymbolic(varnames) << std::endl;
-  
+
+  f = parsePolynomial(varnames, 5, "1+(2*5)^2+3");
+  std::cout << f.evaluateSymbolic(varnames) << std::endl;
+
 
 
   return 0;
