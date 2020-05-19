@@ -9,6 +9,11 @@
 #include "State.hpp"
 #include "Polynomial.hpp"
 
+struct ComponentData{
+  long componentSize;
+  std::vector<long> limitCycle;
+};
+
 /// Class of a FDS which is given by polynomials
 class PolynomialFDS
 {
@@ -46,6 +51,7 @@ public:
   void evaluate(const int u[], int output[]);
 
   void display(std::ostream& o);
+
 };
 
 inline std::ostream& operator<<(std::ostream& o, PolynomialFDS f)
@@ -57,7 +63,9 @@ inline std::ostream& operator<<(std::ostream& o, PolynomialFDS f)
 PolynomialFDS readPDS(std::string filename); // TODO: to be written
 
 std::vector<long> computeStateSpace(PolynomialFDS& FDS);
-  
+
+std::vector<ComponentData>  computeComponentsAndCycles(const std::vector<long>& stateSpace);
+
 #endif
 
 // Local Variables:

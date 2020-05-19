@@ -33,15 +33,88 @@ std::vector<long> computeStateSpace(PolynomialFDS& FDS)
   return stateSpace;
 }
 
-void computeComponentsAndCycles(const std::vector<long>& stateSpace)
+std::vector<ComponentData> computeComponentsAndCycles(const std::vector<long>& stateSpace)
 {
   std::vector<long> cycle { stateSpace.size(), -1};
+  std::vector<long> limitCycles; // limitCycles[i] is a state in the i-th limit cycle.
+  std::vector<ComponentData> result;
+  long nextIndex = 0;
+  for (long i = 0; i < stateSpace.size(); ++i)
+    {
+      if (cycle[i] >= 0) continue;
+      long pt = i;
+      while (cycle[pt] == -1)
+        {
+          cycle[pt] = nextIndex;
+          pt = stateSpace[pt];
+        }
+      if (cycle[pt] == nextIndex)
+        {
+          limitCycles.push_back(pt);
+          nextIndex++;
+        }
+      else
+        {
+          long thisLimtCycle = cycle[pt];
+          long j = i;
+          while (j != pt)
+            {
+              cycle[j] = thisLimtCycle;
+              j = stateSpace[j];
+            }
+        }
+    }
 
-  // add in nlimitcycles, limitcycles, cyclelength, trajectory (scratch)
-  // populate all of these figure out what to return.
-}
+  // TODO: compute the component sizes and limit cycle sizes.
+  //       write a function to write this info to a file.
+  //       call this function from e.g. main.
+  // display cycles
+  // for each limit cycle, want:
+  //    size of the cycle
+  //    size of the component
+  //    
+};
 
 #if 0
+pseudo-code vars:
+  p = #states per variable
+  n = #vars
+  N = p^n
+  stateSpace[0..N-1]
+  #limitcycles
+  std::vector limitCycles: length #limitcycles. At i-th index, this is a point in the i-th limit cycle.
+  std::vector limitcyclelengths
+  cycle[0..N-1]: vector of ints (limit cycle index)
+pseudo-code
+  set cycle[i] = -1 for all i=0..N-1
+  nextIndex = 0
+  for i from 0 to N-1 do (
+    if cycle[i] >= 0 then continue
+    pt = i
+
+    while cycle[pt] == -1 do (
+        cycle[pt] = nextIndex
+        pt = stateSpace[pt]
+        )
+
+    if cycle[pt] == nextIndex
+    then (
+        -- new limit cycle
+        limitCycles.push_back(pt)
+        nextIndex = nextIndex + 1
+        )
+    else (
+        j = i
+        while j != pt do (
+            cycle[j] = cycle[pt]
+            j = stateSpace[j]
+            )
+        
+        )
+    )
+        
+    
+
 // Example for computeComponentsAndCycles.
 // We decided: probably union-find is not needed here.
 // But we thought of a modified version which should work well here.
@@ -82,7 +155,22 @@ trajectory array: keep the trajectory.
 [0, 7, 6, 2]
 
 [0, 0, 0, 3, 3, 3, 0, 0]  i: name of a component.
-union-find
+
+new example:
+  0 1 2 3 4 5 6 7
+  1 4 7 7 4 7 2 6
+
+cycle array at various times
+   0  1  2  3  4  5  6  7
+  -1 -1 -1 -1 -1 -1 -1 -1 (after this line: nextCycle=0)
+   0  0  .  .  0  .  .  . (after this line: nextCycle=1)
+   .  .  1  .  .  .  1  1 (after: nextCycle=2)
+            1        
+                  1
+
+
+
+                      union-find
 parent: [0 1 2 3 4 5 6 7]
         [0 1 2 3 4 5 6 0]
         [1 1 2 3 4 5 6 0]  -- after 17
