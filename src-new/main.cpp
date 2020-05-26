@@ -1,3 +1,11 @@
+// TODO for June 2020
+//   1. write a function readFDS().
+//   2. incorporate that into `main`, also printing to a file.
+//   3. Write a dot file.
+//   4. clean up the tests, add a few more tests.
+//   5. error checking and error display
+//   6. walk through the code and clean/document it
+
 #include <iostream>
 #include "Polynomial.hpp"
 #include "PolynomialFDS.hpp"
@@ -45,7 +53,7 @@ Polynomial examplePoly1()
   int n1 = f.createPlusNode(3,4);
   int n2 = f.createPlusNode(5,n1);
   int n3 = f.createTimesNode(n1,n2);
-  int n4 = f.createTimesNode(n3, 1);
+  f.createTimesNode(n3, 1);
   f.debug_display(std::cout);
   return f;
 }
@@ -68,7 +76,7 @@ Polynomial examplePoly3()
   return h;
 }
 
-int main(int argc, char** argv)
+void someTests()
 {
   std::vector<std::string> varnames = { "x3", "x", "P53" };
   Polynomial f = parsePolynomial(varnames, 3, "x3 + P53*( 1 + x)");
@@ -90,11 +98,26 @@ int main(int argc, char** argv)
 
   f = parsePolynomial(varnames, 5, "1+(2*5)^2+3");
   std::cout << f.evaluateSymbolic(varnames) << std::endl;
+}
 
+PolynomialFDS examplePDS2()
+{
+  int nstates = 2;
+  std::vector<std::string> varnames { "x1", "x2", "x3" };
+  std::vector<std::string> polystrs
+    {
+     "x1+x2",
+     "x2*x3+1",
+     "x1+x1*x3"
+    };
 
+  std::vector<Polynomial> polys;
+  for (const auto& s : polystrs)
+    polys.push_back(parsePolynomial(varnames, nstates, s));
+  return PolynomialFDS(polys, varnames);
+}
 
-  return 0;
-  
+#if 0  
   f = examplePoly1();
   int pt[4] {0,1,1,2};
   std::cout << "f(0,1,1,2) = " << f.evaluate(pt) << std::endl;
@@ -110,13 +133,85 @@ int main(int argc, char** argv)
   //    std::cout << a << " ";
   //  }
   
-#if 0
   if (argc < 2)
     {
       std::cout << "simFDS <FDS file> -o <output dot file>" << std::endl;
       return 1;
     }
-#endif
   return 0;
 }
+#endif
 
+PolynomialFDS cyclonePDS1()
+{
+  int nstates = 2;
+  std::vector<std::string> varnames { "x1", "x2" };
+  std::vector<std::string> polystrs
+    {
+     "1+x2",
+     "0+x1" // TODO: BUG: replacing this with x1 causes the poly to become 0!
+    };
+
+  std::vector<Polynomial> polys;
+  for (const auto& s : polystrs)
+    polys.push_back(parsePolynomial(varnames, nstates, s));
+  return PolynomialFDS(polys, varnames);
+}
+
+PolynomialFDS cyclonePDS2()
+{
+  int nstates = 2;
+  std::vector<std::string> varnames { "x1", "x2", "x3" };
+  std::vector<std::string> polystrs
+    {
+     "1+x2",
+     "x1+x3",
+     "x1*x2"
+    };
+
+  std::vector<Polynomial> polys;
+  for (const auto& s : polystrs)
+    polys.push_back(parsePolynomial(varnames, nstates, s));
+  return PolynomialFDS(polys, varnames);
+}
+
+PolynomialFDS cyclonePDS3()
+{
+  int nstates = 2;
+  std::vector<std::string> varnames { "M", "B", "Ob", "Tb", "A", "Da", "L", "Hl" };
+  std::vector<std::string> polystrs
+    {
+     "A",
+     "M + (B*(Tb+1)) + M*B*(Tb+1)",
+     "(M+1)*B",
+     "(M+1)*Ob",
+     "(B*L + Hl + B*L*Hl) + A*Da*(B+1) + (B*L + Hl + B*L*Hl)*A*Da*(B+1)",
+     "((B+1) + (L+1) + (B+1)*(L+1))*(Hl+1)*A",
+     "L",
+     "Hl"
+    };
+
+  std::vector<Polynomial> polys;
+  for (const auto& s : polystrs)
+    polys.push_back(parsePolynomial(varnames, nstates, s));
+  return PolynomialFDS(polys, varnames);
+}
+
+int main(int argc, char** argv)
+{
+  if (false && argc < 2)
+    {
+      std::cout << "simFDS <FDS file> -o <output dot file>" << std::endl;
+      return 1;
+    }
+
+  //  PolynomialFDS pds = examplePDS2();
+  //  PolynomialFDS pds = cyclonePDS1();
+  //  PolynomialFDS pds = cyclonePDS2();
+  PolynomialFDS pds = cyclonePDS3();
+  std::cout << pds << std::endl;
+  std::vector<long> stateSpace = computeStateSpace(pds);
+  auto limitCycleInfo = computeComponentsAndCycles(stateSpace);
+  displayLimitCycleInfo(std::cout, limitCycleInfo);
+  return 0;
+}

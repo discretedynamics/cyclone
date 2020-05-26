@@ -17,6 +17,11 @@ void PolynomialFDS::evaluate(const int u[], int output[])
     }
 }
 
+PolynomialFDS readPDS(std::string filename)
+{
+  // TODO: write this.
+}
+
 std::vector<long> computeStateSpace(PolynomialFDS& FDS)
 {
   std::vector<long> stateSpace(FDS.totalNumStates(), -1); // set length, initialize each to a bad value
@@ -35,9 +40,18 @@ std::vector<long> computeStateSpace(PolynomialFDS& FDS)
 
 std::vector<ComponentData> computeComponentsAndCycles(const std::vector<long>& stateSpace)
 {
-  std::vector<long> cycle { stateSpace.size(), -1};
+  // cycle[0..N-1] starts out with all -1's, and then each -1 is eventually replaced with the
+  //   index of the limit cycle that state goes to (N = stateSpace.size()
+  std::vector<long> cycle(stateSpace.size(), -1);
+
+  std::cout << "State space: ";
+  for (long i = 0; i < stateSpace.size(); ++i)
+    std::cout << stateSpace[i] << " ";
+  std::cout << std::endl;
+  
+  // A growing array, the length is the number of limit cycles found so far
   std::vector<long> limitCycles; // limitCycles[i] is a state in the i-th limit cycle.
-  std::vector<ComponentData> result;
+
   long nextIndex = 0;
   for (long i = 0; i < stateSpace.size(); ++i)
     {
@@ -51,7 +65,7 @@ std::vector<ComponentData> computeComponentsAndCycles(const std::vector<long>& s
       if (cycle[pt] == nextIndex)
         {
           limitCycles.push_back(pt);
-          nextIndex++;
+          nextIndex++; // note nextIndex is always limitCycles.size() (as a long).
         }
       else
         {
@@ -65,15 +79,55 @@ std::vector<ComponentData> computeComponentsAndCycles(const std::vector<long>& s
         }
     }
 
-  // TODO: compute the component sizes and limit cycle sizes.
-  //       write a function to write this info to a file.
-  //       call this function from e.g. main.
-  // display cycles
-  // for each limit cycle, want:
-  //    size of the cycle
-  //    size of the component
-  //    
+  // This contains the component info, and each limit cycle
+  std::vector<ComponentData> result(limitCycles.size());
+
+  std::cout << "cycle array: ";
+  for (long i = 0; i < cycle.size(); ++i)
+    std::cout << cycle[i] << " ";
+  std::cout << std::endl;
+
+  // fill in the component sizes of each component
+  for (long i = 0; i < cycle.size(); ++i)
+    {
+      result[cycle[i]].componentSize++;
+    }
+
+  for (long j = 0; j < limitCycles.size(); j++)
+    {
+      long pt = limitCycles[j];
+      result[j].limitCycle.push_back(pt);
+      long q = stateSpace[pt];
+      while (q != pt)
+        {
+          result[j].limitCycle.push_back(q);
+          q = stateSpace[q];
+        }
+    }
+  return result;
 };
+
+void displayLimitCycleInfo(std::ostream& o, const std::vector<ComponentData>& cycleinfo)
+{
+  o << "Number of cycles (components): " << cycleinfo.size() << std::endl << std::endl;
+  for (long i=0; i<cycleinfo.size(); i++)
+    {
+      
+      long cyclelen = cycleinfo[i].limitCycle.size();
+      o << "COMPONENT #" << i << ":" << std::endl;
+      o << "  component size: " << cycleinfo[i].componentSize << std::endl;
+      if (cyclelen == 1)
+        o << "  fixed point: " << cycleinfo[i].limitCycle[0] << std::endl;
+      else {
+        o << "  cycle of length " << cyclelen << ": ";
+        for (int j=0; j<cyclelen; j++)
+          {
+            o << cycleinfo[i].limitCycle[j] << " -> ";
+          }
+        o << cycleinfo[i].limitCycle[0] << std::endl << std::endl;
+      }
+    }
+}
 
 #if 0
 pseudo-code vars:

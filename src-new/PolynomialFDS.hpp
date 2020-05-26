@@ -9,10 +9,14 @@
 #include "State.hpp"
 #include "Polynomial.hpp"
 
-struct ComponentData{
+struct ComponentData {
   long componentSize;
   std::vector<long> limitCycle;
+
+  ComponentData() : componentSize(0) {}
 };
+
+void displayLimitCycleInfo(std::ostream& o, const std::vector<ComponentData>& cycleinfo);
 
 /// Class of a FDS which is given by polynomials
 class PolynomialFDS

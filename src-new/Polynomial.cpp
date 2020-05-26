@@ -51,13 +51,17 @@ std::ostream& Polynomial::debug_display(std::ostream& o) const
 
 int Polynomial::constantNode(int a)
 {
-  return(a % mNumStates);
+  int c = a % mNumStates;
+  mResultLocation = c;
+  return c;
 }
 
 int Polynomial::variableNode(int var)
 {
   // TODO: check that var is in range?
-  return mNumStates + var;
+  int v = mNumStates + var;
+  mResultLocation = v;
+  return v;
 }
 
 int Polynomial::createPlusNode(int first_loc, int second_loc)
