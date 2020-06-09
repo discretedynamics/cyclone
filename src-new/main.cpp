@@ -1,12 +1,13 @@
 // TODO for June 2020
-//   1. write a function readFDS().
+//   1. write a function readFDS().  WORKING ON THIS: need to do regex code.
 //   2. incorporate that into `main`, also printing to a file.
-//   3. Write a dot file.
+//   3. Write a dot file. DONE mostly
 //   4. clean up the tests, add a few more tests.
 //   5. error checking and error display
 //   6. walk through the code and clean/document it
 
 #include <iostream>
+#include <fstream>
 #include "Polynomial.hpp"
 #include "PolynomialFDS.hpp"
 
@@ -202,16 +203,38 @@ int main(int argc, char** argv)
   if (false && argc < 2)
     {
       std::cout << "simFDS <FDS file> -o <output dot file>" << std::endl;
+      // simFDS <file> -o <output file>?
+      // input type: always an FDS file, also: starting state or states
+      // output: dot file, limit cycle info (plain text file), trajectory itself (format=??)
       return 1;
     }
+
+  std::string filename = "foo.pds";
+  // Structure of main:
+  //  read in a PDS
+  //  if needed: compute state space
+  //  if needed: compute trajectories
+  //  display trajectories
+  //  display limit cycle and component info
+  //  display as a dot file the state space
 
   //  PolynomialFDS pds = examplePDS2();
   //  PolynomialFDS pds = cyclonePDS1();
   //  PolynomialFDS pds = cyclonePDS2();
+  PolynomialFDS* pds = readPDS(filename);
+
+  return 0;
+#if 0
   PolynomialFDS pds = cyclonePDS3();
   std::cout << pds << std::endl;
   std::vector<long> stateSpace = computeStateSpace(pds);
   auto limitCycleInfo = computeComponentsAndCycles(stateSpace);
   displayLimitCycleInfo(std::cout, limitCycleInfo);
+
+  std::ofstream ofil;
+  ofil.open("foo.dot");
+  writeDotFile(ofil, pds, stateSpace);
+  ofil.close();
   return 0;
+#endif
 }

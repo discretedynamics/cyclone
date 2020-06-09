@@ -1,3 +1,5 @@
+#include <fstream>
+#include <regex>
 #include "PolynomialFDS.hpp"
 
 void PolynomialFDS::display(std::ostream& o)
@@ -17,9 +19,50 @@ void PolynomialFDS::evaluate(const int u[], int output[])
     }
 }
 
-PolynomialFDS readPDS(std::string filename)
+PolynomialFDS* readPDS(std::string filename)
 {
-  // TODO: write this.
+  // Step1: read in the file as a list of lines.
+
+  std::ifstream ifil;
+  ifil.open(filename);
+  std::vector<std::string> lines;
+  std::string thisline;
+  // todo: add in some error checking. throw an error if a problem.
+  while (getline(ifil, thisline))
+    lines.push_back(thisline);
+  ifil.close();
+
+  // Loop through the lines one by one:
+  int numstates = -1;
+  int numvars = -1;
+  std::vector<std::string> varnames;
+  std::vector<std::string> polystrs;
+
+  for (auto& line : lines)
+    {
+#if 0      
+      if (line[0] == "#") continue;
+      // use regex's?
+      if (line starts with "NUMBER OF VARIABLES:")
+        {
+          // grab the rest
+          numvars = val;
+        }
+
+      if (line[0] == "f")
+        {
+          // check that we are ready for a poly.
+          // grab the number
+          // grab the string after the = sign, without spaces.
+        }
+#endif
+    }
+
+  std::vector<Polynomial> polys;
+  for (const auto& s : polystrs)
+    polys.push_back(parsePolynomial(varnames, numstates, s));
+  return nullptr; // remove once ready
+  //  return new PolynomialFDS(polys, varnames);
 }
 
 std::vector<long> computeStateSpace(PolynomialFDS& FDS)
@@ -106,6 +149,27 @@ std::vector<ComponentData> computeComponentsAndCycles(const std::vector<long>& s
     }
   return result;
 };
+
+void writeDotFile(std::ostream& o,
+                  PolynomialFDS& FDS,
+                  const std::vector<long>& stateSpace)
+{
+  o << "digraph statespace {" << std::endl;
+
+  // display label for each node in the statespace
+
+  // display the edges
+  State u(FDS.numStates(), FDS.numVariables());
+  State v(FDS.numStates(), FDS.numVariables());
+  for (long i=0; i < stateSpace.size(); ++i)
+    {
+      u.setFromIndex(i);
+      v.setFromIndex(stateSpace[i]);
+      o << "  " << u << " -> " << v << std::endl;
+    }
+
+  o << "}" << std::endl;
+}
 
 void displayLimitCycleInfo(std::ostream& o, const std::vector<ComponentData>& cycleinfo)
 {

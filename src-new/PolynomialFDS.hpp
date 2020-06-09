@@ -64,11 +64,16 @@ inline std::ostream& operator<<(std::ostream& o, PolynomialFDS f)
   return o;
 }
   
-PolynomialFDS readPDS(std::string filename); // TODO: to be written
+PolynomialFDS* readPDS(std::string filename); // TODO: being written
 
 std::vector<long> computeStateSpace(PolynomialFDS& FDS);
 
+void writeDotFile(std::ostream& o,
+                  PolynomialFDS& FDS,
+                  const std::vector<long>& stateSpace);
+
 std::vector<ComponentData>  computeComponentsAndCycles(const std::vector<long>& stateSpace);
+
 
 #endif
 

@@ -1,8 +1,11 @@
 #ifndef __state_hpp_
 #define __state_hpp_
 
+#include <ostream>
+
 class State
 {
+  friend std::ostream& operator<<(std::ostream& o, const State& u);
   int mNumStates;
   std::vector<int> mState; // 0..numvars-1
 public:
@@ -13,7 +16,7 @@ public:
     // require that numvars >= 1.
     // require that mNumStates >= 2.
   }
-  
+
   int* getState() { return mState.data(); }
 
   void setFromIndex(long index)
@@ -42,6 +45,25 @@ public:
   }
 };
 
+inline std::ostream& operator<<(std::ostream& o, const State& u)
+{
+  if (false and u.mNumStates <= 9)
+    {
+      for (long i=0; i < u.mState.size(); ++i)
+        o << u.mState[i];
+    }
+  else
+    {
+      o << "\"";
+      for (long i=0; i < u.mState.size(); ++i)
+        {
+          if (i > 0) o << " ";
+          o << u.mState[i];
+        }
+      o << "\"";
+    }
+  return o;
+}
 #endif
 
 // Local Variables:
