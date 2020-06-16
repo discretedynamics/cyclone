@@ -8,7 +8,7 @@ void PolynomialFDS::display(std::ostream& o)
     << " numvars=" << numVariables()
     << std::endl;
   for (int i=0; i < mPolynomials.size(); i++)
-    o << "  " << mPolynomials[i].evaluateSymbolic(mVariableNames) << std::endl;
+    o << "  " << mVariableNames[i] << " = " << mPolynomials[i].evaluateSymbolic(mVariableNames) << std::endl;
 }
 
 void PolynomialFDS::evaluate(const int u[], int output[])
@@ -40,29 +40,66 @@ PolynomialFDS* readPDS(std::string filename)
 
   for (auto& line : lines)
     {
-#if 0      
-      if (line[0] == "#") continue;
-      // use regex's?
-      if (line starts with "NUMBER OF VARIABLES:")
+      // removes all white space on the line
+      line.erase(std::remove_if(line.begin(),
+                                line.end(),
+                                [](unsigned char x) { return std::isspace(x); }
+                                ),
+                 line.end());
+
+      if (line.size() == 0) continue;
+      if (line[0] == '#') continue;
+
+      // is this a : line or = line, where is the location of that?
+      auto colon = line.find_first_of(":"); // returns a giant number if not found.
+
+      if (colon < line.size())
         {
-          // grab the rest
-          numvars = val;
+          std::string firstpart = line.substr(0, colon);
+          std::string secondpart = line.substr(colon+1, line.size());
+          if (0 == firstpart.compare("NUMBEROFVARIABLES"))
+            {
+              if (numvars >= 0)
+                throw("cannot specify number of variables more than once");
+              numvars = parseNumber(line, colon+1, line.size());
+              continue;
+            }
+
+          if (0 == firstpart.compare("NUMBEROFSTATES"))
+            {
+              if (numstates >= 0)
+                throw("cannot specify number of states more than once");
+              numstates = parseNumber(line, colon+1, line.size());
+              // if (not isprime(numstates))
+              //   throw("expected the number of states to be a prime number");
+              continue;
+            }
+          throw("unexpected colon on line");
         }
 
-      if (line[0] == "f")
+      // at this point, we had better have a string of the form "var=poly"      
+      auto equals = line.find_first_of("=");
+      if (equals < line.size())
         {
-          // check that we are ready for a poly.
-          // grab the number
-          // grab the string after the = sign, without spaces.
+          // create two strings, place them into varnames, polystrs.
+          varnames.push_back(line.substr(0,equals));
+          polystrs.push_back(line.substr(equals+1, line.size()));
+          continue;
         }
-#endif
+      throw("unexpected line format on line");
     }
+  
+  if (numvars >= 0 and varnames.size() != numvars)
+    throw("number of variables declared differs from the number of equations");
 
+  if (numstates <= 1)
+    throw("expected a prime number of states");
+  
   std::vector<Polynomial> polys;
   for (const auto& s : polystrs)
     polys.push_back(parsePolynomial(varnames, numstates, s));
-  return nullptr; // remove once ready
-  //  return new PolynomialFDS(polys, varnames);
+
+  return new PolynomialFDS(polys, varnames);
 }
 
 std::vector<long> computeStateSpace(PolynomialFDS& FDS)

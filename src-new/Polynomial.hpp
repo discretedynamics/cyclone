@@ -90,6 +90,7 @@ public:
 
 Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, const std::string& str);
 
+int parseNumber(const std::string &str, int begin, int end);
 
 #endif
 

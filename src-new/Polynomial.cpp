@@ -325,7 +325,6 @@ public:
                                  [](unsigned char x) { return std::isspace(x); }
                                  ),
                   mString.end());
-    std::cout << "string after removing spaces: ." << mString << "." << std::endl;
   }
 
   Polynomial value()

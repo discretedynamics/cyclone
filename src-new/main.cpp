@@ -1,6 +1,6 @@
 // TODO for June 2020
-//   1. write a function readFDS().  WORKING ON THIS: need to do regex code.
-//   2. incorporate that into `main`, also printing to a file.
+//   1. write a function readFDS().  DONE, we think.  Maybe better error handling.
+//   2. incorporate that into `main`, also printing to a file. WORKING ON THIS. Write limit cycle to a file. Use states, not indices.
 //   3. Write a dot file. DONE mostly
 //   4. clean up the tests, add a few more tests.
 //   5. error checking and error display
@@ -200,16 +200,18 @@ PolynomialFDS cyclonePDS3()
 
 int main(int argc, char** argv)
 {
-  if (false && argc < 2)
+  if (argc < 2)
     {
-      std::cout << "simFDS <FDS file> -o <output dot file>" << std::endl;
-      // simFDS <file> -o <output file>?
-      // input type: always an FDS file, also: starting state or states
-      // output: dot file, limit cycle info (plain text file), trajectory itself (format=??)
+      std::cout << "simFDS <FDS project name>" << std::endl;
+      std::cout << "  -- read in polynomial dynamical system (e.g. foo.pds if project name is 'foo')" << std::endl;
+      std::cout << "  -- create statespace and summary (limit cycle info), e.g. in files foo-statespace.dot, foo-limitcycles.txt" << std::endl;
+      std::cout << "simFDS <FDS project name> -summary-only" << std::endl;
+      std::cout << "  -- create summary only, no state space, in file e.g. foo-limitcycles.txt" << std::endl; 
+      //std::cout << "simFDS <FDS project name> -trajectory 1 0 1 1 2" << std::endl;
       return 1;
     }
 
-  std::string filename = "foo.pds";
+  std::string projectName = argv[1];
   // Structure of main:
   //  read in a PDS
   //  if needed: compute state space
@@ -218,23 +220,17 @@ int main(int argc, char** argv)
   //  display limit cycle and component info
   //  display as a dot file the state space
 
-  //  PolynomialFDS pds = examplePDS2();
-  //  PolynomialFDS pds = cyclonePDS1();
-  //  PolynomialFDS pds = cyclonePDS2();
-  PolynomialFDS* pds = readPDS(filename);
+  PolynomialFDS* pds = readPDS(projectName + ".pds");
+  std::cout << "We read in the following FDS: " << std::endl;
+  std::cout << *pds << std::endl;
 
-  return 0;
-#if 0
-  PolynomialFDS pds = cyclonePDS3();
-  std::cout << pds << std::endl;
-  std::vector<long> stateSpace = computeStateSpace(pds);
+  std::vector<long> stateSpace = computeStateSpace(*pds);
   auto limitCycleInfo = computeComponentsAndCycles(stateSpace);
   displayLimitCycleInfo(std::cout, limitCycleInfo);
 
   std::ofstream ofil;
-  ofil.open("foo.dot");
-  writeDotFile(ofil, pds, stateSpace);
+  ofil.open(projectName + "-statespace.dot");
+  writeDotFile(ofil, *pds, stateSpace);
   ofil.close();
   return 0;
-#endif
 }
