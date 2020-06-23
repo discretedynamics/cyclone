@@ -1,0 +1,6 @@
+# test example 1
+NUMBER OF VARIABLES: 2
+NUMBER OF STATES: 2
+
+x1 = 1+x2
+x2 = x1

@@ -47,20 +47,10 @@ public:
 
 inline std::ostream& operator<<(std::ostream& o, const State& u)
 {
-  if (false and u.mNumStates <= 9)
+  for (long i=0; i < u.mState.size(); ++i)
     {
-      for (long i=0; i < u.mState.size(); ++i)
-        o << u.mState[i];
-    }
-  else
-    {
-      o << "\"";
-      for (long i=0; i < u.mState.size(); ++i)
-        {
-          if (i > 0) o << " ";
-          o << u.mState[i];
-        }
-      o << "\"";
+      if (i > 0) o << " ";
+      o << u.mState[i];
     }
   return o;
 }

@@ -1,10 +1,16 @@
+// create image file from a doot file as like:
+//   dot -Tpng -o foo.png foo-statespace.dot
 // TODO for June 2020
-//   1. write a function readFDS().  DONE, we think.  Maybe better error handling.
-//   2. incorporate that into `main`, also printing to a file. WORKING ON THIS. Write limit cycle to a file. Use states, not indices.
-//   3. Write a dot file. DONE mostly
-//   4. clean up the tests, add a few more tests.
-//   5. error checking and error display
-//   6. walk through the code and clean/document it
+//   1. DONE: write a function readFDS().  DONE.
+//   2. DONE: incorporate that into `main`, also printing to a file. WORKING ON THIS. Write limit cycle to a file. Use states, not indices.
+//   3. DONE: Write a dot file.
+//   4. test this on some real examples, that we can test "by hand", or "by M2", or by cyclone.
+//   5. create a number of tests (at least 20 examples, with at least the summary answers, some with dot files)
+//   6. try to incorporate this into algorun and plantsimlab.
+//   7. clean up the tests, add a few more tests.
+//   8. error checking and error display
+//   9. walk through the code and clean/document it
+//   
 
 #include <iostream>
 #include <fstream>
@@ -205,13 +211,25 @@ int main(int argc, char** argv)
       std::cout << "simFDS <FDS project name>" << std::endl;
       std::cout << "  -- read in polynomial dynamical system (e.g. foo.pds if project name is 'foo')" << std::endl;
       std::cout << "  -- create statespace and summary (limit cycle info), e.g. in files foo-statespace.dot, foo-limitcycles.txt" << std::endl;
-      std::cout << "simFDS <FDS project name> -summary-only" << std::endl;
+      std::cout << "simFDS <FDS project name> --summary" << std::endl;
       std::cout << "  -- create summary only, no state space, in file e.g. foo-limitcycles.txt" << std::endl; 
       //std::cout << "simFDS <FDS project name> -trajectory 1 0 1 1 2" << std::endl;
       return 1;
     }
 
   std::string projectName = argv[1];
+  bool write_dot_file = true;
+  if (argc == 3)
+    {
+      if (0 != strcmp(argv[2], "--summary"))
+        {
+          std::cout << "Expected:last argument to be --summary" << std::endl;
+          return 2;
+        }
+      write_dot_file = false;
+    }
+        
+
   // Structure of main:
   //  read in a PDS
   //  if needed: compute state space
@@ -221,16 +239,23 @@ int main(int argc, char** argv)
   //  display as a dot file the state space
 
   PolynomialFDS* pds = readPDS(projectName + ".pds");
-  std::cout << "We read in the following FDS: " << std::endl;
-  std::cout << *pds << std::endl;
 
   std::vector<long> stateSpace = computeStateSpace(*pds);
   auto limitCycleInfo = computeComponentsAndCycles(stateSpace);
-  displayLimitCycleInfo(std::cout, limitCycleInfo);
+  //  displayLimitCycleInfo(std::cout, *pds, limitCycleInfo);
 
-  std::ofstream ofil;
-  ofil.open(projectName + "-statespace.dot");
-  writeDotFile(ofil, *pds, stateSpace);
-  ofil.close();
+  std::ofstream summaryFile;
+  summaryFile.open(projectName + "-limitcycles.txt");
+  displayLimitCycleInfo(summaryFile, *pds, limitCycleInfo);
+  summaryFile.close();
+
+  if (write_dot_file)
+    {
+      std::ofstream ofil;
+      ofil.open(projectName + "-statespace.dot");
+      writeDotFile(ofil, *pds, stateSpace);
+      ofil.close();
+    }
+
   return 0;
 }

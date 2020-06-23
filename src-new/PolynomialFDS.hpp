@@ -16,7 +16,6 @@ struct ComponentData {
   ComponentData() : componentSize(0) {}
 };
 
-void displayLimitCycleInfo(std::ostream& o, const std::vector<ComponentData>& cycleinfo);
 
 /// Class of a FDS which is given by polynomials
 class PolynomialFDS
@@ -74,6 +73,7 @@ void writeDotFile(std::ostream& o,
 
 std::vector<ComponentData>  computeComponentsAndCycles(const std::vector<long>& stateSpace);
 
+void displayLimitCycleInfo(std::ostream& o, const PolynomialFDS& pds, const std::vector<ComponentData>& cycleinfo);
 
 #endif
 

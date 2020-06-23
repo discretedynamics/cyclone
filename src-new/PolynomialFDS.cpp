@@ -124,11 +124,6 @@ std::vector<ComponentData> computeComponentsAndCycles(const std::vector<long>& s
   //   index of the limit cycle that state goes to (N = stateSpace.size()
   std::vector<long> cycle(stateSpace.size(), -1);
 
-  std::cout << "State space: ";
-  for (long i = 0; i < stateSpace.size(); ++i)
-    std::cout << stateSpace[i] << " ";
-  std::cout << std::endl;
-  
   // A growing array, the length is the number of limit cycles found so far
   std::vector<long> limitCycles; // limitCycles[i] is a state in the i-th limit cycle.
 
@@ -161,11 +156,6 @@ std::vector<ComponentData> computeComponentsAndCycles(const std::vector<long>& s
 
   // This contains the component info, and each limit cycle
   std::vector<ComponentData> result(limitCycles.size());
-
-  std::cout << "cycle array: ";
-  for (long i = 0; i < cycle.size(); ++i)
-    std::cout << cycle[i] << " ";
-  std::cout << std::endl;
 
   // fill in the component sizes of each component
   for (long i = 0; i < cycle.size(); ++i)
@@ -202,30 +192,41 @@ void writeDotFile(std::ostream& o,
     {
       u.setFromIndex(i);
       v.setFromIndex(stateSpace[i]);
-      o << "  " << u << " -> " << v << std::endl;
+      o << "  "
+        << "\"" << u << "\""
+        << " -> "
+        << "\"" << v << "\""
+        << std::endl;
     }
 
   o << "}" << std::endl;
 }
 
-void displayLimitCycleInfo(std::ostream& o, const std::vector<ComponentData>& cycleinfo)
+void displayLimitCycleInfo(std::ostream& o,
+                           const PolynomialFDS& pds,
+                           const std::vector<ComponentData>& cycleinfo)
 {
   o << "Number of cycles (components): " << cycleinfo.size() << std::endl << std::endl;
+  State u(pds.numStates(), pds.numVariables());  
   for (long i=0; i<cycleinfo.size(); i++)
     {
-      
       long cyclelen = cycleinfo[i].limitCycle.size();
-      o << "COMPONENT #" << i << ":" << std::endl;
+      o << "COMPONENT #" << i+1 << ":" << std::endl;
       o << "  component size: " << cycleinfo[i].componentSize << std::endl;
       if (cyclelen == 1)
-        o << "  fixed point: " << cycleinfo[i].limitCycle[0] << std::endl;
+        {
+          u.setFromIndex(cycleinfo[i].limitCycle[0]);
+          o << "  fixed point: [" << u << "]" << std::endl << std::endl;
+        }
       else {
-        o << "  cycle of length " << cyclelen << ": ";
+        o << "  cycle of length " << cyclelen << ": " << std::endl;
         for (int j=0; j<cyclelen; j++)
           {
-            o << cycleinfo[i].limitCycle[j] << " -> ";
+            u.setFromIndex(cycleinfo[i].limitCycle[j]);
+            o << "    [" << u << "] -> " << std::endl;
           }
-        o << cycleinfo[i].limitCycle[0] << std::endl << std::endl;
+        u.setFromIndex(cycleinfo[i].limitCycle[0]);
+        o << "    [" << u << "]" << std::endl << std::endl;
       }
     }
 }

@@ -1,0 +1,7 @@
+NUMBER OF VARIABLES: 4
+NUMBER OF STATES: 3
+
+x = y+w
+y = x+z
+z = x*y+1
+w = w

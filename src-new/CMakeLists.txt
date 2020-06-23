@@ -1,5 +1,10 @@
+# compile via:
+#  cd build
+#  cmake -DCMAKE_BUILD_TYPE=Release ..
+#  make
+
 #set(CMAKE_VERBOSE_MAKEFILE on)
-set(CMAKE_BUILD_DEBUG on)
+#set(CMAKE_BUILD_DEBUG on)
 #set(SUPPRESS_COMPILER_WARNINGS on)
 
 cmake_minimum_required(VERSION 3.14)
