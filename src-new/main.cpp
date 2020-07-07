@@ -12,6 +12,7 @@
 //   9. walk through the code and clean/document it
 //   
 
+#include <string>
 #include <iostream>
 #include <fstream>
 #include "Polynomial.hpp"
@@ -204,45 +205,12 @@ PolynomialFDS cyclonePDS3()
   return PolynomialFDS(polys, varnames);
 }
 
-int main(int argc, char** argv)
+void runStateSpaceComputation(std::string projectName, bool write_dot_file)
 {
-  if (argc < 2)
-    {
-      std::cout << "simFDS <FDS project name>" << std::endl;
-      std::cout << "  -- read in polynomial dynamical system (e.g. foo.pds if project name is 'foo')" << std::endl;
-      std::cout << "  -- create statespace and summary (limit cycle info), e.g. in files foo-statespace.dot, foo-limitcycles.txt" << std::endl;
-      std::cout << "simFDS <FDS project name> --summary" << std::endl;
-      std::cout << "  -- create summary only, no state space, in file e.g. foo-limitcycles.txt" << std::endl; 
-      //std::cout << "simFDS <FDS project name> -trajectory 1 0 1 1 2" << std::endl;
-      return 1;
-    }
-
-  std::string projectName = argv[1];
-  bool write_dot_file = true;
-  if (argc == 3)
-    {
-      if (0 != strcmp(argv[2], "--summary"))
-        {
-          std::cout << "Expected:last argument to be --summary" << std::endl;
-          return 2;
-        }
-      write_dot_file = false;
-    }
-        
-
-  // Structure of main:
-  //  read in a PDS
-  //  if needed: compute state space
-  //  if needed: compute trajectories
-  //  display trajectories
-  //  display limit cycle and component info
-  //  display as a dot file the state space
-
   PolynomialFDS* pds = readPDS(projectName + ".pds");
 
   std::vector<long> stateSpace = computeStateSpace(*pds);
   auto limitCycleInfo = computeComponentsAndCycles(stateSpace);
-  //  displayLimitCycleInfo(std::cout, *pds, limitCycleInfo);
 
   std::ofstream summaryFile;
   summaryFile.open(projectName + "-limitcycles.txt");
@@ -256,6 +224,122 @@ int main(int argc, char** argv)
       writeDotFile(ofil, *pds, stateSpace);
       ofil.close();
     }
+}
+
+void runTrajectoryComputation(std::string projectName, const std::vector<int>& startPoint, bool write_dot_file)
+{
+  std::cout << "running trajectory computation" << std::endl;
+
+  PolynomialFDS* pds = readPDS(projectName + ".pds");
+
+#if 0
+
+  // TODO: get this code working.
+  std::vector<long> trajectory;
+  std::unordered_map<long, long> hash;
+
+  State u(pds.numStates(), fds.numVariables());
+  State v(pds.numStates(), fds.numVariables());
+
+  // TODO: u = startPoint
+  hash.insert(u.getIndex(), 0);
+  long count = 1;
+  while (true)
+    {
+      trajectory.push_back(u);
+      pds.evaluate(u.getState(), v.getState());
+      long vindex = v.getIndex();
+      auto result = hash.insert(vindex,count);
+      if (not result.second)
+        final_index = result.first->second; // ??
+      // either break out, or set u and continue
+      u.setFromIndex(vindex);
+      count++;
+    }
+  // TODO: display.
+#endif
+  // TODO: check: startPoint has length nvars, all values are between 0 and numStates-1.
+  // TODO: have a loop that runs through the trajectory:
+  //   std::vector<int> trajectory.
+  //   put u onto trajectory
+  //   count = 0;
+  //   put u=>count into a hash table
+  //   loop
+  //      v = next state from u
+  //      count++
+  //      if v is in the hash table: break out of loop, and write the files.
+  //         (also will add v=>count to hash table).
+  //      trajetory.push_back(v)
+  //   end loop
+  //   write the trajectory to a dot file
+  //   write the summary text.
+  // 
+}
+
+int main(int argc, char* argv[])
+{
+  if (argc < 2)
+    {
+      std::cout << "Usage:" << std::endl;
+      std::cout << "  simFDS <FDS project name>" << std::endl;
+      std::cout << "    -- read in polynomial dynamical system (e.g. foo.pds if project name is 'foo')" << std::endl;
+      std::cout << "    -- create statespace and summary (limit cycle info), e.g. in files foo-statespace.dot, foo-limitcycles.txt" << std::endl;
+      std::cout << "  simFDS <FDS project name> --summary" << std::endl;
+      std::cout << "    -- create summary only, no state space, in file e.g. foo-limitcycles.txt" << std::endl; 
+      std::cout << "  simFDS foo --trajectory 1 1 0 1 1 2" << std::endl;
+      std::cout << "    -- run the trajectory with the given start point" << std::endl;
+      std::cout << "    -- create files foo-110112.dot, foo-110112.txt." << std::endl;
+      std::cout << "    -- the first file is a dot file with the whole trajectory graph" << std::endl;
+      std::cout << "    -- the second file is a text file describing the length of the path, and the resulting limit cycle" << std::endl;
+      std::cout << "  simFDS foo --summary --trajectory 1 1 0 1 1 2" << std::endl;
+      std::cout << "    -- same as --trajectory, except the .dot file is not created" << std::endl;
+      
+      return 1;
+    }
+
+  std::vector<std::string> args;
+  args.assign(argv+1, argv+argc);
+  
+  std::string projectName = argv[1];
+  std::vector<int> trajectoryStart; // length 0 if --trajectory is not set, i.e. if trajectoryIndex == -1.
+
+  // summaryIndex: will be set to the index of the argument --summary.  (e.g. in simFDS foo --summary, the value will be 2).
+  auto summaryFound = std::find(args.begin(), args.end(), "--summary");
+  int summaryIndex = (summaryFound == args.end() ? -1 : summaryFound - args.begin());
+
+  // trajectoryIndex: will be set to the index of the argument --trajectory.  (e.g. in simFDS foo --trajectory, the value will be 2).
+  auto trajectoryFound = std::find(args.begin(), args.end(), "--trajectory");
+  int trajectoryIndex = (trajectoryFound == args.end() ? -1 : trajectoryFound - args.begin());
+
+  // Fill in the trajectory, if it exists.
+  if (trajectoryIndex != -1)
+    {
+      int top = (summaryIndex == -1 or summaryIndex < trajectoryIndex ? args.size() : summaryIndex);
+      for (int i = trajectoryIndex + 1; i < top; i++)
+        {
+          size_t lastloc;
+          int val = std::stoi(args[i], &lastloc, 10);
+          if (lastloc != args[i].size())
+            {
+              std::cerr << "expected nonnegative integers as arguments after --trajectory" << std::endl;
+              return 1;
+            }
+          trajectoryStart.push_back(val);
+        }
+    }
+  
+  std::cout << "trajectory index: " << trajectoryIndex << std::endl;
+  std::cout << "summary index: " << summaryIndex << std::endl;
+  std::cout << "trajectory: ";
+  for (auto a : trajectoryStart) std::cout << a << " ";
+  std::cout << std::endl;
+  
+  bool write_dot_file = (summaryIndex == -1);
+
+  if (trajectoryIndex == -1)
+    runStateSpaceComputation(projectName, write_dot_file);
+  else
+    runTrajectoryComputation(projectName, trajectoryStart, write_dot_file);
 
   return 0;
 }
