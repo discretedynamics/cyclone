@@ -15,6 +15,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 #include "Polynomial.hpp"
 #include "PolynomialFDS.hpp"
 
@@ -228,52 +229,52 @@ void runStateSpaceComputation(std::string projectName, bool write_dot_file)
 
 void runTrajectoryComputation(std::string projectName, const std::vector<int>& startPoint, bool write_dot_file)
 {
+  // TODO: get this code working.
+
   std::cout << "running trajectory computation" << std::endl;
 
   PolynomialFDS* pds = readPDS(projectName + ".pds");
 
-#if 0
+  if (startPoint.size() != pds->numVariables())
+    {
+      // TO DO: ERROR
+    }
+  // TODO:check that all entries of startPoint are in range 0..pds.numState()-1
 
-  // TODO: get this code working.
   std::vector<long> trajectory;
   std::unordered_map<long, long> hash;
 
-  State u(pds.numStates(), fds.numVariables());
-  State v(pds.numStates(), fds.numVariables());
+  
+  State u(pds->numStates(), startPoint); // TODO: write this constructor.
+  State v(pds->numStates(), pds->numVariables());
 
-  // TODO: u = startPoint
-  hash.insert(u.getIndex(), 0);
+  hash.insert(std::make_pair(u.getIndex(), 0));
   long count = 1;
+  long final_index = -1;
   while (true)
     {
-      trajectory.push_back(u);
-      pds.evaluate(u.getState(), v.getState());
+      trajectory.push_back(u.getIndex());
+      pds->evaluate(u.getState(), v.getState());
       long vindex = v.getIndex();
-      auto result = hash.insert(vindex,count);
+      auto result = hash.insert(std::make_pair(vindex,count));
       if (not result.second)
-        final_index = result.first->second; // ??
-      // either break out, or set u and continue
-      u.setFromIndex(vindex);
+        {
+          final_index = hash[vindex];
+          break;
+        }
+      u.setFromState(v);
       count++;
     }
+
+  std::cout << "count = " << count << std::endl;
+  std::cout << "final_index = " << final_index << std::endl;
+  std::cout << u << std::endl;
+  std::cout << v << std::endl;
   // TODO: display.
-#endif
-  // TODO: check: startPoint has length nvars, all values are between 0 and numStates-1.
-  // TODO: have a loop that runs through the trajectory:
-  //   std::vector<int> trajectory.
-  //   put u onto trajectory
-  //   count = 0;
-  //   put u=>count into a hash table
-  //   loop
-  //      v = next state from u
-  //      count++
-  //      if v is in the hash table: break out of loop, and write the files.
-  //         (also will add v=>count to hash table).
-  //      trajetory.push_back(v)
-  //   end loop
-  //   write the trajectory to a dot file
-  //   write the summary text.
-  // 
+  //  length of the trajectory until it hits the limit cycle (summary)
+  //  length of the limit cycle (summary)
+  //  the limit cycle itself (dot file/summary)
+  //  entire graph of the whole trajectory (dot file).
 }
 
 int main(int argc, char* argv[])

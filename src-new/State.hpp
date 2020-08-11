@@ -17,7 +17,23 @@ public:
     // require that mNumStates >= 2.
   }
 
+  State(int numstates, const std::vector<int>& state_vals)
+    : mNumStates(numstates),
+      mState(state_vals)
+  {
+  }
+
   int* getState() { return mState.data(); }
+
+  void setFromState(const State& v)
+  {
+    if (mNumStates != v.mNumStates or mState.size() != v.mState.size())
+      {
+        throw "expected same number of states and variables";
+      }
+
+    for (int i=0; i<mState.size(); ++i) mState[i] = v.mState[i];
+  }
 
   void setFromIndex(long index)
   {
