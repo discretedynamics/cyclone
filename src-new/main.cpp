@@ -16,6 +16,8 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include <algorithm>
+#include <vector>
 #include "Polynomial.hpp"
 #include "PolynomialFDS.hpp"
 
