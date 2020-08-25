@@ -27,6 +27,8 @@ set(SOURCES
   Polynomial.cpp
   PolynomialFDS.hpp
   PolynomialFDS.cpp
+  examples.hpp
+  examples.cpp
   main.cpp
   )
 
