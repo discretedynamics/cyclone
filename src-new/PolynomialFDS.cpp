@@ -24,6 +24,8 @@ PolynomialFDS* readPDS(std::string filename)
   // Step1: read in the file as a list of lines.
   std::ifstream ifil;
   ifil.open(filename);
+  if (not ifil.is_open())
+    throw std::runtime_error("failed to open file: " + filename);
   std::vector<std::string> lines;
   std::string thisline;
   // todo: add in some error checking. throw an error if a problem.
