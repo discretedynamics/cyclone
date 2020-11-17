@@ -22,9 +22,10 @@ void PolynomialFDS::evaluate(const int u[], int output[])
 PolynomialFDS* readPDS(std::string filename)
 {
   // Step1: read in the file as a list of lines.
-
   std::ifstream ifil;
   ifil.open(filename);
+  if (not ifil.is_open())
+    throw std::runtime_error("failed to open file: " + filename);
   std::vector<std::string> lines;
   std::string thisline;
   // todo: add in some error checking. throw an error if a problem.
@@ -60,7 +61,7 @@ PolynomialFDS* readPDS(std::string filename)
           if (0 == firstpart.compare("NUMBEROFVARIABLES"))
             {
               if (numvars >= 0)
-                throw("cannot specify number of variables more than once");
+                throw std::runtime_error("cannot specify number of variables more than once");
               numvars = parseNumber(line, colon+1, line.size());
               continue;
             }
@@ -68,13 +69,13 @@ PolynomialFDS* readPDS(std::string filename)
           if (0 == firstpart.compare("NUMBEROFSTATES"))
             {
               if (numstates >= 0)
-                throw("cannot specify number of states more than once");
+                throw std::runtime_error("cannot specify number of states more than once");
               numstates = parseNumber(line, colon+1, line.size());
               // if (not isprime(numstates))
-              //   throw("expected the number of states to be a prime number");
+              //   throw std::runtime_error("expected the number of states to be a prime number");
               continue;
             }
-          throw("unexpected colon on line");
+          throw std::runtime_error("unexpected colon on line");
         }
 
       // at this point, we had better have a string of the form "var=poly"      
@@ -86,14 +87,14 @@ PolynomialFDS* readPDS(std::string filename)
           polystrs.push_back(line.substr(equals+1, line.size()));
           continue;
         }
-      throw("unexpected line format on line");
+      throw std::runtime_error("unexpected line format on line");
     }
   
   if (numvars >= 0 and varnames.size() != numvars)
-    throw("number of variables declared differs from the number of equations");
+    throw std::runtime_error("number of variables declared differs from the number of equations");
 
   if (numstates <= 1)
-    throw("expected a prime number of states");
+    throw std::runtime_error("expected a prime number of states, not " + std::to_string(numstates));
   
   std::vector<Polynomial> polys;
   for (const auto& s : polystrs)

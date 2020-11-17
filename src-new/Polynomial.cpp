@@ -222,14 +222,14 @@ int findLocation(const std::string& str, int begin, int end, char op)
     if (c == '(') {
       --level;
       if (level < 0)
-        throw("parentheses mismatch");
+        throw std::runtime_error("parentheses mismatch");
       continue;
     }
     if (level > 0) continue;
     if (c == op)
       return i;
   }
-  if (level > 0) throw("parentheses mismatch");
+  if (level > 0) throw std::runtime_error("parentheses mismatch");
   return end;
 }
 
@@ -241,7 +241,7 @@ int parseNumber(const std::string &str, int begin, int end)
     std::string s { str.substr(begin, end-begin) };
     int a = std::stoi(s, &lastloc, 10); // Not correct yet:  "23(a+b)" return val will be 2
     if (lastloc != end-begin)
-      throw("expected the entire string " + s + " to be a number");
+      throw std::runtime_error("expected the entire string " + s + " to be a number");
     return a;
   }
   return 0;
@@ -262,7 +262,7 @@ private:
     if (i < end) {
       //      std::cout << "found + at: " << i << std::endl;
       if (i == end-1)
-        throw("+ needs two expressions");
+        throw std::runtime_error("+ needs two expressions");
       if (i == begin) return parsePoly(begin+1, end);
       int left = parsePoly(begin,i);
       int right = parsePoly(i+1,end);
@@ -273,7 +273,7 @@ private:
     if (i < end) {
       //      std::cout << "found * at: " << i << std::endl;
       if (i == begin or i == end-1)
-        throw("* needs two expressions");
+        throw std::runtime_error("* needs two expressions");
       int left = parsePoly(begin,i);
       int right = parsePoly(i+1,end);
       return mResult.createTimesNode(left, right);
@@ -283,7 +283,7 @@ private:
     if (i < end) {
       //      std::cout << "found ^ at: " << i << std::endl;
       if (i == begin or i == end-1)
-        throw("^ needs two expressions");
+        throw std::runtime_error("^ needs two expressions");
       int left = parsePoly(begin,i);
       int exp = parseNumber(mString, i+1, end);
       return mResult.createPowerNode(left, exp);
@@ -291,7 +291,7 @@ private:
 
     if (mString[begin] == '(') {
       if (mString[end-1] != ')')
-        throw("mismatched parentheses");
+        throw std::runtime_error("mismatched parentheses");
       //      std::cout << "found parens at: " << begin << " and " << end << std::endl;      
       return parsePoly(begin+1, end-1);
     }
@@ -306,7 +306,7 @@ private:
     //    std::cout << "looking for identifier: in " << mString.substr(begin, end-begin) << " at: [" << begin << ", " << end << ")" << std::endl;
     auto pos = std::find(mVarNames.begin(), mVarNames.end(), mString.substr(begin, end-begin));
     if (pos == mVarNames.end())
-      throw("expected a variable name starting at position " + std::to_string(begin));
+      throw std::runtime_error("expected a variable name starting at position " + std::to_string(begin));
     //    std::cout << "found identifier: " << pos-mVarNames.begin() << " at: " << begin << " and " << end << std::endl;
     return mResult.variableNode(pos-mVarNames.begin());
   }
