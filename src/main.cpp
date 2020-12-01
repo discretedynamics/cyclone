@@ -3,12 +3,15 @@
 // TODO (created November 2020)
 //   1. source code
 //      a. tests
-//   2. web interface
-//      a. update algorun_info/manifest.json
+//   2. web interface (in progress)
+//      a. update algorun_info/manifest.json <-
 //      b. update input_example, output_example
 //      c. update run.py must: no-translation, update calls to cyclone (replace with shell script, remove python from dockerfile)
 //   3. dockerize
-//      a. fix Dockerfile (modern cmake, gcc)
+//      a. fix Dockerfile (modern cmake, gcc) DONE, "modern" achieved.
+//   4. contact Ibrahim for update to Ubuntu 20.04 (tagged version)
+//   5. node installation via apt repository.
+//   6. file extension resolve project vs. filename
 // TODO for June 2020
 //   1. DONE: write a function readFDS().  DONE.
 //   2. DONE: incorporate that into `main`, also printing to a file. WORKING ON THIS. Write limit cycle to a file. Use states, not indices.

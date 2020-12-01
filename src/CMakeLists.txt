@@ -7,19 +7,20 @@
 #set(CMAKE_BUILD_DEBUG on)
 #set(SUPPRESS_COMPILER_WARNINGS on)
 
-cmake_minimum_required(VERSION 3.14)
+#cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.5)
 
 ## specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 ## set the project name, version, and languages
-project(simFDS
-  VERSION 0.1
-  DESCRIPTION "Simulation of finite dynamical systems"
-  HOMEPAGE_URL https://github.com/discretedynamics/cyclone.git
-  LANGUAGES CXX
-  )
+#project(simFDS
+#  VERSION 0.1
+#  DESCRIPTION "Simulation of finite dynamical systems"
+#  HOMEPAGE_URL https://github.com/discretedynamics/cyclone.git
+#  LANGUAGES CXX
+#  )
 
 set(SOURCES
   State.hpp

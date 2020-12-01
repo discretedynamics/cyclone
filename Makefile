@@ -14,3 +14,9 @@ docker-run:
 
 docker-bash:
 	docker exec -it cyclone /bin/bash
+
+docker-nuke:
+	docker container rm $(docker container ls -aq)
+
+docker-prune:
+	docker container prune
