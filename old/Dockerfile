@@ -21,12 +21,12 @@ ADD ./src /home/algorithm/src/
 ADD CMakeLists.txt /home/algorithm/
 
 # Install any algorithm dependencies here
-#RUN cmake /home/algorithm/CMakeLists.txt && \
-#make -C /home/algorithm/ clean && \
-#make -C /home/algorithm/ install
+RUN cmake /home/algorithm/CMakeLists.txt && \
+make -C /home/algorithm/ clean && \
+make -C /home/algorithm/ install
 
-#RUN apt-get update && \
-#apt-get install -y python
+RUN apt-get update && \
+apt-get install -y python
 
 # [Optional] Sign your image
 MAINTAINER Abdelrahman Hosny <abdelrahman.hosny@hotmail.com>
