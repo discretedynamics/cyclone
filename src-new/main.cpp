@@ -1,5 +1,14 @@
 // create image file from a dot file as like:
 //   dot -Tpng -o foo.png foo-statespace.dot
+// TODO (created November 2020)
+//   1. source code
+//      a. tests
+//   2. web interface
+//      a. update algorun_info/manifest.json
+//      b. update input_example, output_example
+//      c. update run.py must: no-translation, update calls to cyclone (replace with shell script, remove python from dockerfile)
+//   3. dockerize
+//      a. fix Dockerfile (modern cmake, gcc)
 // TODO for June 2020
 //   1. DONE: write a function readFDS().  DONE.
 //   2. DONE: incorporate that into `main`, also printing to a file. WORKING ON THIS. Write limit cycle to a file. Use states, not indices.
