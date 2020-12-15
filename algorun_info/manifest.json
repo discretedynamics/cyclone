@@ -1,43 +1,44 @@
 {
-   	"manifest_version": "2.0",
-	"algo_name": "Cyclone",
-	"algo_version": "1.0.0",
-	"algo_summary": "Calculate Dynamics of a discrete dynamical system using exhaustive search",
-	"algo_description": "",
-	"algo_website": "https://github.com/PlantSimLab/cyclone",
-	"algo_keywords": ["reverse engineering", "cell biology"],
-	"published_paper": {
-            "title": "",
-            "url": ""
-    	},
-	"algo_authors": [
-		{
-			"name": "Reinhard Laubenbacher (PI)",
-			"email": "laubenbacher@uchc.edu",
-			"profile_picture": "",
-			"personal_website": "http://facultydirectory.uchc.edu/profile?profileId=Laubenbacher-Reinhard",
-			"organization": "Center for Quantitative Medicine",
-			"org_website": "http://cqm.uchc.edu/"
-		}
-	],
-	"algo_packager": {
-            "name": "Abdelrahman Hosny",
-            "email": "abdelrahman.hosny@hotmail.com",
-            "personal_website": "http://abdelrahmanhosny.me",
-            "profile_picture": "",
-            "organization": "University of Connecticut", 
-            "org_website": "http://cse.uconn.edu" 
-    },
-    "algo_exec": "simFDS $input",
-    "algo_input": [
-	{ "name": "input", "src": "file", "type": "text/plain", "accepted_format": "DiscreteDynamicalSystemSet" }
-    ],
-    "algo_output": [
-	{ "name": "output", "src": "cyclone_output.txt", "type": "text/plain", "format": "AnnotatedGraph" },
-	{ "name": "visualization", "src": "cyclone_output.png", "type": "image/png", "format": "AnnotatedGraph" }
-    ],
-    "algo_parameters": { 
-        "caching": "on"
-    },
-    "algo_image": "algorun/cyclone"
+  "manifest_version": "2.0",
+  "algo_name": "Cyclone",
+  "algo_version": "1.0.0",
+  "algo_summary": "Calculate Dynamics of a discrete dynamical system using exhaustive search",
+  "algo_description": "",
+  "algo_website": "https://github.com/discretedynamics/cyclone",
+  "algo_keywords": ["finite dynamical system", "cell biology"],
+  "published_paper": {
+    "title": "",
+    "url": ""
+  },
+  "algo_authors": [
+    {
+      "name": "Reinhard Laubenbacher (PI)",
+      "email": "laubenbacher@uchc.edu",
+      "profile_picture": "",
+      "personal_website": "http://facultydirectory.uchc.edu/profile?profileId=Laubenbacher-Reinhard",
+      "organization": "Center for Quantitative Medicine",
+      "org_website": "http://cqm.uchc.edu/"
+    }
+  ],
+  "algo_packager": {
+    "name": "Abdelrahman Hosny",
+    "email": "abdelrahman.hosny@hotmail.com",
+    "personal_website": "http://abdelrahmanhosny.me",
+    "profile_picture": "",
+    "organization": "University of Connecticut", 
+    "org_website": "http://cse.uconn.edu" 
+  },
+  "algo_exec": "runner.sh $input",
+  "algo_input": [
+    { "name": "input", "src": "file", "type": "text/plain", "accepted_format": "DiscreteDynamicalSystemSet" }
+  ],
+  "algo_output": [
+    { "name": "statespace", "src": "project-statespace.dot", "type": "text/plain", "format": "AnnotatedGraph" },
+    { "name": "summary", "src": "project-limitcycles.txt", "type": "text/plain", "format": "AnnotatedGraph" },
+    { "name": "visualization", "src": "project-statespace.png", "type": "image/png", "format": "AnnotatedGraph" }
+  ],
+  "algo_parameters": { 
+    "caching": "on"
+  },
+  "algo_image": "algorun/cyclone"
 }

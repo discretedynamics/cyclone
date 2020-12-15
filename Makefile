@@ -1,16 +1,15 @@
 all:
 	mkdir -p build
-	cd build; cmake ..; make
+	cd build && cmake -S ../src -B . && make
 
 clean:
-	rm -rf build build-1 build-old cmake-builld*
-	rm foo-output*
+	rm -rf build 
 
 docker:
 	docker build -t discretedynamics/cyclone:0.1.0 .
 
 docker-run:
-	docker run --name cyclone discretedynamics/cyclone:0.1.0 
+	docker run -p 31331:8765 --name cyclone discretedynamics/cyclone:0.1.0 
 
 docker-bash:
 	docker exec -it cyclone /bin/bash

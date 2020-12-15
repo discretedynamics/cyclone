@@ -2,16 +2,18 @@
 //   dot -Tpng -o foo.png foo-statespace.dot
 // TODO (created November 2020)
 //   1. source code
-//      a. tests
+//      a. tests see june 2020 #7
 //   2. web interface (in progress)
 //      a. update algorun_info/manifest.json <-
-//      b. update input_example, output_example
-//      c. update run.py must: no-translation, update calls to cyclone (replace with shell script, remove python from dockerfile)
+//         i. get description from ibrahim about parameters (algo_input, algo_output)
+//         ii. bug fix for missing display of sample files.
+//      b. update input_example, output_example (mostly done, bugfix, maybe change to example with cycle)
+//      c. update run.py must: no-translation, update calls to cyclone (replace with shell script, remove python from dockerfile) DONE
 //   3. dockerize
-//      a. fix Dockerfile (modern cmake, gcc) DONE, "modern" achieved.
-//   4. contact Ibrahim for update to Ubuntu 20.04 (tagged version)
-//   5. node installation via apt repository.
-//   6. file extension resolve project vs. filename
+//      a. fix Dockerfile (modern cmake, gcc) DONE, "modern" achieved. DONE
+//   4. contact Ibrahim for update to Ubuntu 20.04 (tagged version) (in-progress)
+//   5. node installation via apt repository. (unnesc.)
+//   6. file extension resolve project vs. filename DONE
 // TODO for June 2020
 //   1. DONE: write a function readFDS().  DONE.
 //   2. DONE: incorporate that into `main`, also printing to a file. WORKING ON THIS. Write limit cycle to a file. Use states, not indices.
@@ -19,7 +21,7 @@
 //   4. test this on some real examples, that we can test "by hand", or "by M2", or by cyclone.
 //   5. create a number of tests (at least 20 examples, with at least the summary answers, some with dot files)
 //   6. try to incorporate this into algorun and plantsimlab.
-//   7. clean up the tests, add a few more tests.
+//   7. clean up the tests, add a few more tests. test-runner
 //   8. error checking and error display
 //   9. walk through the code and clean/document it
 //   

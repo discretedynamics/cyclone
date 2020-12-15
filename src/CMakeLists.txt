@@ -15,7 +15,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 ## set the project name, version, and languages
-#project(simFDS
+project(simFDS)
+# project(simFDS
 #  VERSION 0.1
 #  DESCRIPTION "Simulation of finite dynamical systems"
 #  HOMEPAGE_URL https://github.com/discretedynamics/cyclone.git

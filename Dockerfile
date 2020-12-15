@@ -17,7 +17,8 @@ RUN mkdir /home/algorithm/build && \
 cd /home/algorithm/build && \
 cmake ../src/ && \
 make && \
-mv /home/algorithm/build/simFDS /usr/bin/
+mv /home/algorithm/build/simFDS /usr/bin/ && \
+mv /home/algorithm/src/runner.sh /usr/bin/
 
 #RUN apt-get update && \
 #apt-get install -y python

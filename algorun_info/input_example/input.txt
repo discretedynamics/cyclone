@@ -1,9 +1,8 @@
-MODEL NAME: sook_model
-SIMULATION NAME: sim1
-NUMBER OF VARIABLES: 2
-VARIABLE NAMES: x1 x2
-NUMBER OF STATES: 2 2
-SPEED OF VARIABLES: 1 1
+# Example Boolean Model
+NUMBER OF VARIABLES: 4
+NUMBER OF STATES :   2
 
-f1 = 1+x2
-f2 = x1
+M  = B
+B  = M + (B*(Tb+1)) + M*B*(Tb+1)
+Ob = (M+1)*B
+Tb = (M+1)*Ob
