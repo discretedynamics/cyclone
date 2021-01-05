@@ -33,9 +33,9 @@
     { "name": "input", "src": "file", "type": "text/plain", "accepted_format": "DiscreteDynamicalSystemSet" }
   ],
   "algo_output": [
-    { "name": "statespace", "src": "project-statespace.dot", "type": "text/plain", "format": "AnnotatedGraph" },
-    { "name": "summary", "src": "project-limitcycles.txt", "type": "text/plain", "format": "AnnotatedGraph" },
-    { "name": "visualization", "src": "project-statespace.png", "type": "image/png", "format": "AnnotatedGraph" }
+      { "name": "summary", "src": "project-limitcycles.txt", "type": "text/plain" },
+      { "name": "visualization", "src": "project-statespace.png", "type": "image/png" },
+      { "name": "statespace", "src": "project-statespace.dot", "type": "text/plain", "format": "AnnotatedGraph" }
   ],
   "algo_parameters": { 
     "caching": "on"
