@@ -10,6 +10,7 @@ docker:
 
 docker-run:
 	docker run -p 31331:8765 --name cyclone discretedynamics/cyclone:0.1.0 
+# after this, go to browser, load: localhost:31331
 
 docker-bash:
 	docker exec -it cyclone /bin/bash
@@ -19,3 +20,4 @@ docker-nuke:
 
 docker-prune:
 	docker container prune
+

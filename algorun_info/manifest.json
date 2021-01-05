@@ -30,7 +30,7 @@
   },
   "algo_exec": "runner.sh $input",
   "algo_input": [
-    { "name": "input", "src": "file", "type": "text/plain", "accepted_format": "DiscreteDynamicalSystemSet" }
+      { "name": "input", "src": "file", "type": "text/plain", "accepted_format": "DiscreteDynamicalSystemSet" }
   ],
   "algo_output": [
       { "name": "summary", "src": "project-limitcycles.txt", "type": "text/plain" },

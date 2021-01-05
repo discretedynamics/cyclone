@@ -1,12 +1,21 @@
 // create image file from a dot file as like:
 //   dot -Tpng -o foo.png foo-statespace.dot
+// TODO (created Jan 2020)
+//   1. add doc tab to algorun
+//   2. bugs in algorun (or wherever...!)
+//   3. change parameters to allow user to select only summary
+//      (want: on, off, auto: auto chooses 'on' if size is reasonable...)
+//   4. don't run simFDS in debug mode!
+//   5. algorun: would like multiple sample input files (e.g. dropdown menu)
+//   6. for running tests, consider using catch2.cpp (unit testing framework), will require changed to CMakeLists.txt
+//   7. boolean format from Claus' examples: need to translate.
 // TODO (created November 2020)
 //   1. source code
 //      a. tests see june 2020 #7
 //   2. web interface (in progress)
 //      a. update algorun_info/manifest.json <-
 //         i. get description from ibrahim about parameters (algo_input, algo_output)
-//         ii. bug fix for missing display of sample files.
+//         ii. bug fix for missing display of sample files. DONE
 //      b. update input_example, output_example (mostly done, bugfix, maybe change to example with cycle)
 //      c. update run.py must: no-translation, update calls to cyclone (replace with shell script, remove python from dockerfile) DONE
 //   3. dockerize
