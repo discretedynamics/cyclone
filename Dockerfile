@@ -16,7 +16,7 @@ ADD ./src /home/algorithm/src/
 # Install any algorithm dependencies here
 RUN mkdir /home/algorithm/build && \
 cd /home/algorithm/build && \
-cmake ../src/ && \
+cmake -DCMAKE_BUILD_TYPE=Release ../src/ && \
 make && \
 mv /home/algorithm/build/simFDS /usr/bin/ && \
 mv /home/algorithm/src/runner.sh /usr/bin/

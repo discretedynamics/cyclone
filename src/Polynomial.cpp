@@ -254,6 +254,39 @@ private:
   std::string mString;
   const std::vector<std::string>& mVarNames;
 private:
+  // TODO (19 Jan 2021): make changes to parsing and evaluation necessary to handle boolean functions, max and min calls.
+  //   add in new nodes for SLP.
+  //   add in operators: |, ~, min, max
+  //   preprocess to remove AND, OR, NOT, XOR, give error if used, but not char 2 (at least AND, OR, XOR)
+  //   min(a,b): needs to be handled.
+  //   parsing changes...
+#if 0
+  // Just some of our meanderings related to allowing boolean functions
+  ~ (& *) | +
+  a*b == a & b
+    ~a == 1 + a, char=5, ~0 == 4, ~1 == 3,  ~2 == 2  (char-1)*(1+a)
+  a|b == a*b + a + b
+  a^b == a+b 
+
+  [ AND ] ==> *
+  [ NOT ] ==> ~
+  [ OR ] ==> |
+  [ XOR ] ==> +
+  NOT
+  OR
+  AND == *
+  XOR == +
+    
+    ~ ^ & |
+  ~ & ^ |
+  |, &^, ~
+  &, |, ~, ^
+  a & b & c
+  (a & b ^ c) | (~d) == ((a & b) ^ c) | (~d)
+  a ^ (b & c)
+  a ^ b ^ c == (a ^ b) ^ c == a ^ (b ^ c)
+#endif
+    
   // parse str[begin]..str[end-1].
   int parsePoly(int begin, int end)
   {
