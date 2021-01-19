@@ -1,0 +1,41 @@
+HTR		= serotonin
+
+PLCb		= HTR
+
+cAMP		= HTR
+
+DAG		= PIP2 AND (PLCb OR PLCg)
+
+PLCg		= HTR
+
+IP3		= PIP2 AND (PLCb OR PLCg)
+
+PKC		= DAG AND (Ca2p OR Ca2pER_Low OR Ca2pER_High)
+
+TRPC3		= ((NOT HOMER) AND (IP3RLow AND PLCg AND CAM)) OR (DAG AND NOT PKC)
+
+HOMER		= NOT IP3RLow
+
+Ca2pER_High	= IP3RHigh
+
+CAM		= (Ca2p OR Ca2pER_Low OR Ca2pER_High)
+
+SERCA		= (Ca2p OR Ca2pER_Low OR Ca2pER_High)
+
+CaBP1		= Ca2pER_High AND DANGER
+
+ATPcyt		= NOT SERCA
+
+CamKII		= CAM
+
+IP3RLow		= (IP3 AND DANGER AND (PKC OR PKA OR CamKII OR Gb3)) AND NOT (IRBIT OR CaBP1 OR ATPcyt)
+
+IP3RHigh	= (IP3 AND DANGER AND PKC AND PKA AND Gb3) AND NOT (IRBIT OR CaBP1 OR ATPcyt)
+
+DANGER		= HTR
+
+Gb3		= HTR
+
+IRBIT		= CamkII
+
+Ca2p		= TRPC3
