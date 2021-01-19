@@ -169,6 +169,10 @@ void runTrajectoryComputation(std::string projectName, const std::vector<int>& s
 
 int main(int argc, char* argv[])
 {
+  extern std::string translateAndOrNotXor(const std::string& s);
+  std::cout << translateAndOrNotXor("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d") << std::endl;
+  std::cout << translateAndOrNotXor("a OR OR b") << std::endl;
+  
   if (argc < 2)
     {
       std::cout << "Usage:" << std::endl;
