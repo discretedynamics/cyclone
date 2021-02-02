@@ -46,9 +46,8 @@ class Polynomial
 
   struct operand
   {
-    enum { PLUS, TIMES, POWER } op;
-    int first_arg;
-    int second_arg;
+    enum { PLUS, TIMES, POWER, OR, NOT, MAX, MIN} op;
+    std::vector<int> args;
   };
   
   int mNumStates; // possible values of each variable are 0..mNumState-1, mNumStates must be prime.
@@ -80,6 +79,12 @@ public:
   int variableNode(int var);
   int createPlusNode(int first_loc, int second_loc);
   int createTimesNode(int first_loc, int second_loc);
+
+  int createOrNode(int first_loc, int second_loc);
+  int createNotNode(int first_loc);
+  int createMaxNode(std::vector<int> locs);
+  int createMinNode(std::vector<int> locs);
+  
   int exp(int base, int exponent);
   int createPowerNode(int first_loc, int exponent);
   int evaluate(const int pt[]);

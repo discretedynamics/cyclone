@@ -72,7 +72,10 @@ std::ostream& Polynomial::debug_display(std::ostream& o) const
           o << "POWER";
           break;
         }
-      o << " " << mOperands[i].first_arg << " " << mOperands[i].second_arg << std::endl;
+      for (auto a : mOperands[i].args)
+        o << " " << a;
+      o << std::endl;
+      // o << " " << mOperands[i].first_arg << " " << mOperands[i].second_arg << std::endl;
     }
   return o;
 }
@@ -108,7 +111,8 @@ int Polynomial::createPlusNode(int first_loc, int second_loc)
     mResultLocation = first_loc;
   else
     {
-      mOperands.push_back({operand::PLUS, first_loc, second_loc});
+      std::vector<int> args { first_loc, second_loc};
+      mOperands.push_back({operand::PLUS, args});
       mEvaluationValues.push_back(0); // make space in evaluation array for the output.
     }
   return mResultLocation;
@@ -133,10 +137,63 @@ int Polynomial::createTimesNode(int first_loc, int second_loc)
     mResultLocation = first_loc;
   else
     {
-      mOperands.push_back({operand::TIMES, first_loc, second_loc});
+      std::vector<int> args { first_loc, second_loc};
+      mOperands.push_back({operand::TIMES, args});
       mEvaluationValues.push_back(0); // make space in evaluation array for the output.
     }
   return mResultLocation;
+}
+
+// a | b == a + b + a*b
+// mod 3
+// a | a == a
+// 0 | a == a
+// 2 | a == 2
+// a | b == b | a
+// 1 | 1 == 1
+// a + a + a^2 == a^2 - a = (0,1,2) 0, 0, 2
+int Polynomial::createOrNode(int first_loc, int second_loc)
+{
+  std::vector<int> args { first_loc, second_loc };
+  return createMaxNode(args);
+}
+
+int Polynomial::createNotNode(int first_loc)
+{
+  // TODO XXX: 9 Feb 2021.  Ask Adam, what should it be?
+  mResultLocation = mEvaluationValues.size();
+
+  // TODO XXX: get this part functional too.
+  // if (first_loc == 0) // NOT 0
+  //   mResultLocation = p-1 - a;
+  // else if (first_loc == 1) // NOT 1
+  //   mResultLocation = 1;
+  // else if (isConstantLocation(first_loc)) // NOT const
+  //   {
+  //     // evaluate now, because they are constants
+  //     mResultLocation = exp(first_loc, exponent);
+  //   }
+
+  std::vector<int> args { first_loc };
+  mOperands.push_back({operand::NOT, args});
+  mEvaluationValues.push_back(0); // make space in evaluation array for the output.
+  return mResultLocation;
+}
+
+int Polynomial::createMaxNode(std::vector<int> locs)
+{
+  // TODO XXX: 9 Feb 2021
+}
+
+int Polynomial::createMinNode(std::vector<int> locs)
+{
+  // TODO XXX: 9 Feb 2021
+  // Also in this same todo:
+  // Change 2 evaluators
+  // Change display
+  // Change parser to handle not(...), min(expr1, expr2, ...), max.
+  // Translators from not to ~, etc. (we have this function, might need to
+  //   clean it up.
 }
 
 int Polynomial::exp(int base, int exponent)
@@ -176,7 +233,8 @@ int Polynomial::createPowerNode(int first_loc, int exponent)
     mResultLocation = first_loc;
   else
     {
-      mOperands.push_back({operand::POWER, first_loc, exponent});
+      std::vector<int> args { first_loc, exponent };
+      mOperands.push_back({operand::POWER, args});
       mEvaluationValues.push_back(0); // make space in evaluation array for the output.
     }
   return mResultLocation;
@@ -195,15 +253,15 @@ int Polynomial::evaluate(const int pt[]) {
       operand& a = mOperands[i-mFirstOperation];
       switch (a.op) {
       case operand::PLUS:
-        mEvaluationValues[i] = (mEvaluationValues[a.first_arg]
-                                + mEvaluationValues[a.second_arg]) % mNumStates;
+        mEvaluationValues[i] = (mEvaluationValues[a.args[0]]
+                                + mEvaluationValues[a.args[1]]) % mNumStates;
         break;
       case operand::TIMES:
-        mEvaluationValues[i] = (mEvaluationValues[a.first_arg]
-                                * mEvaluationValues[a.second_arg]) % mNumStates;
+        mEvaluationValues[i] = (mEvaluationValues[a.args[0]]
+                                * mEvaluationValues[a.args[1]]) % mNumStates;
         break;
       case operand::POWER:
-        mEvaluationValues[i] = exp(mEvaluationValues[a.first_arg], a.second_arg);
+        mEvaluationValues[i] = exp(mEvaluationValues[a.args[0]], a.args[1]);
         break;
       }
     }
@@ -224,13 +282,13 @@ std::string Polynomial::evaluateSymbolic(const std::vector<std::string>& varname
       operand& a = mOperands[i-mFirstOperation];
       switch (a.op) {
       case operand::PLUS:
-        strs.push_back("(" + strs[a.first_arg] + "+" + strs[a.second_arg] + ")");
+        strs.push_back("(" + strs[a.args[0]] + "+" + strs[a.args[1]] + ")");
         break;
       case operand::TIMES:
-        strs.push_back("(" + strs[a.first_arg] + "*" + strs[a.second_arg] + ")");
+        strs.push_back("(" + strs[a.args[0]] + "*" + strs[a.args[1]] + ")");
         break;
       case operand::POWER:
-        strs.push_back("(" + strs[a.first_arg] + "^" + std::to_string(a.second_arg) + ")");
+        strs.push_back("(" + strs[a.args[0]] + "^" + std::to_string(a.args[1]) + ")");
         break;
       }
     }
