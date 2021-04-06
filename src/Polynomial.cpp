@@ -1,3 +1,11 @@
+// TODO for April 13 2021
+// Translate max min to > , <
+// Add in ~
+// Add evaluator functions for these (and any others?)
+// Test parser.
+// Test it all...
+
+
 #include "Polynomial.hpp"
 
 #include <string>
@@ -5,6 +13,7 @@
 #include <iterator>
 #include <iostream>
 #include <regex>
+
 
 std::string translateAndOrNotXor(const std::string& s)
 {
@@ -62,13 +71,13 @@ std::ostream& Polynomial::debug_display(std::ostream& o) const
       o << "    " << mFirstOperation+i << " = ";
       switch (mOperands[i].op)
         {
-        case operand::PLUS:
+        case operandType::PLUS:
           o << "PLUS";
           break;
-        case operand::TIMES:
+        case operandType::TIMES:
           o << "TIMES";
           break;
-        case operand::POWER:
+        case operandType::POWER:
           o << "POWER";
           break;
         }
@@ -112,7 +121,7 @@ int Polynomial::createPlusNode(int first_loc, int second_loc)
   else
     {
       std::vector<int> args { first_loc, second_loc};
-      mOperands.push_back({operand::PLUS, args});
+      mOperands.push_back({operandType::PLUS, args});
       mEvaluationValues.push_back(0); // make space in evaluation array for the output.
     }
   return mResultLocation;
@@ -138,7 +147,7 @@ int Polynomial::createTimesNode(int first_loc, int second_loc)
   else
     {
       std::vector<int> args { first_loc, second_loc};
-      mOperands.push_back({operand::TIMES, args});
+      mOperands.push_back({operandType::TIMES, args});
       mEvaluationValues.push_back(0); // make space in evaluation array for the output.
     }
   return mResultLocation;
@@ -154,8 +163,7 @@ int Polynomial::createTimesNode(int first_loc, int second_loc)
 // a + a + a^2 == a^2 - a = (0,1,2) 0, 0, 2
 int Polynomial::createOrNode(int first_loc, int second_loc)
 {
-  std::vector<int> args { first_loc, second_loc };
-  return createMaxNode(args);
+  return createMaxMinNode(first_loc, second_loc, MAX_OPERATOR);
 }
 
 int Polynomial::createNotNode(int first_loc)
@@ -175,26 +183,28 @@ int Polynomial::createNotNode(int first_loc)
   //   }
 
   std::vector<int> args { first_loc };
-  mOperands.push_back({operand::NOT, args});
+  mOperands.push_back({operandType::NOT, args});
   mEvaluationValues.push_back(0); // make space in evaluation array for the output.
   return mResultLocation;
 }
 
-int Polynomial::createMaxNode(std::vector<int> locs)
+int Polynomial::createMaxMinNode(int first_loc, int second_loc, char op)
 {
-  // TODO XXX: 9 Feb 2021
+  mResultLocation = mEvaluationValues.size();
+  std::vector<int> args { first_loc, second_loc};
+  operandType maxmin = (op == MIN_OPERATOR ? operandType::MIN : operandType::MAX);
+  mOperands.push_back({maxmin, args});
+  mEvaluationValues.push_back(0); // make space in evaluation array for the output.
+  return mResultLocation;
 }
 
-int Polynomial::createMinNode(std::vector<int> locs)
-{
-  // TODO XXX: 9 Feb 2021
+  // TODO XXX: April 2021
   // Also in this same todo:
   // Change 2 evaluators
   // Change display
   // Change parser to handle not(...), min(expr1, expr2, ...), max.
   // Translators from not to ~, etc. (we have this function, might need to
   //   clean it up.
-}
 
 int Polynomial::exp(int base, int exponent)
 {
@@ -234,7 +244,7 @@ int Polynomial::createPowerNode(int first_loc, int exponent)
   else
     {
       std::vector<int> args { first_loc, exponent };
-      mOperands.push_back({operand::POWER, args});
+      mOperands.push_back({operandType::POWER, args});
       mEvaluationValues.push_back(0); // make space in evaluation array for the output.
     }
   return mResultLocation;
@@ -252,15 +262,15 @@ int Polynomial::evaluate(const int pt[]) {
     {
       operand& a = mOperands[i-mFirstOperation];
       switch (a.op) {
-      case operand::PLUS:
+      case operandType::PLUS:
         mEvaluationValues[i] = (mEvaluationValues[a.args[0]]
                                 + mEvaluationValues[a.args[1]]) % mNumStates;
         break;
-      case operand::TIMES:
+      case operandType::TIMES:
         mEvaluationValues[i] = (mEvaluationValues[a.args[0]]
                                 * mEvaluationValues[a.args[1]]) % mNumStates;
         break;
-      case operand::POWER:
+      case operandType::POWER:
         mEvaluationValues[i] = exp(mEvaluationValues[a.args[0]], a.args[1]);
         break;
       }
@@ -281,13 +291,13 @@ std::string Polynomial::evaluateSymbolic(const std::vector<std::string>& varname
     {
       operand& a = mOperands[i-mFirstOperation];
       switch (a.op) {
-      case operand::PLUS:
+      case operandType::PLUS:
         strs.push_back("(" + strs[a.args[0]] + "+" + strs[a.args[1]] + ")");
         break;
-      case operand::TIMES:
+      case operandType::TIMES:
         strs.push_back("(" + strs[a.args[0]] + "*" + strs[a.args[1]] + ")");
         break;
-      case operand::POWER:
+      case operandType::POWER:
         strs.push_back("(" + strs[a.args[0]] + "^" + std::to_string(a.args[1]) + ")");
         break;
       }
@@ -333,10 +343,10 @@ int findLocation(const std::string& str, int begin, int end, char op)
 //   if this is not a number, it throws an error.
 int parseNumber(const std::string &str, int begin, int end)
 {
+  std::string s { str.substr(begin, end-begin) };
   if ((begin < end) and isdigit(str[begin])) {
     //    std::cout << "found number at: " << begin << " and " << end << std::endl;
     size_t lastloc;
-    std::string s { str.substr(begin, end-begin) };
     int a = std::stoi(s, &lastloc, 10); // Not correct yet:  "23(a+b)" return val will be 2
     if (lastloc != end-begin)
       throw std::runtime_error("expected the entire string " + s + " to be a number");
@@ -430,16 +440,46 @@ private:
     }
 
     // TODO MES: START HERE 30 March 2021.
-    // to handle max, min, for instance
-    // look for max symbol (or min)
-    // split up the rest via top level commas.
-    // parse each of those subexpressions, create a max or min node of those expressions.
-    // max(a,b,c) ==> max(max(a,b), c)
+    // to handle max, min, for instance max(A,B) >(A,B)  TODO
+    // look for max symbol (or min) DONE
+    // split up the rest via top level commas. DONE
+    // parse each of those subexpressions, create a max or min node of those expressions. DONE
+    // max(a,b,c) ==> max(max(a,b), c) DONE
     if (mString[begin] == MAX_OPERATOR or mString[begin] == MIN_OPERATOR)
       {
+        
         // strip parens, loop finding last toplevel ,.
         // build max/min node as we go.
         // return mResult.createMaxMinNode(mString[begin], i, j);
+
+        if (mString[begin+1] == '(') {
+          if (mString[end-1] != ')')
+            throw std::runtime_error("max/min operator has mismatched parentheses");
+        }
+
+        // collect commas (and "begin", "end" locations too)
+        std::vector<int> commas;
+        commas.push_back(begin+1);
+        int current_end = end-1;
+        while (true)
+          {
+            int comma = findLocation(mString, begin+2, current_end, ',');
+            if (comma == current_end) break;
+            commas.push_back(comma);
+            current_end = comma;
+          }
+        commas.push_back(end-1);
+        
+        if (commas.size() == 2)
+          throw std::runtime_error("max/min operator needs two arguments");
+
+        int left = parsePoly(commas[0]+1, commas[1]);
+        for (int i = 2; i < commas.size(); ++i)
+          {
+            int right = parsePoly(commas[i-1] + 1, commas[i]);
+            left = mResult.createMaxMinNode(left, right, mString[begin]);
+          }
+        return left;
       }
     
     // str = a+(b*c+d)

@@ -22,6 +22,9 @@
 //   print function for the polynomial DONE
 //   parse function: string --> creates a polynomial, or gives an intelligible error.
 
+const char MAX_OPERATOR = '>';
+const char MIN_OPERATOR = '<';
+
 class Polynomial
 {
   // (x0+1)*(x1+1) + x2^2
@@ -47,9 +50,12 @@ class Polynomial
   //  start with
   // [0 1 1 1 0]
 
+  enum class operandType {PLUS, TIMES, POWER, OR, NOT, MAX, MIN};
+  
   struct operand
   {
-    enum { PLUS, TIMES, POWER, OR, NOT, MAX, MIN} op;
+    operandType op;
+    //enum { PLUS, TIMES, POWER, OR, NOT, MAX, MIN} op;
     // make OR ==> MAX
     // make AND ==> MIN
     // make NOT ==> a |--> p-1-a
@@ -88,8 +94,7 @@ public:
 
   int createOrNode(int first_loc, int second_loc);
   int createNotNode(int first_loc);
-  int createMaxNode(std::vector<int> locs);
-  int createMinNode(std::vector<int> locs);
+  int createMaxMinNode(int left, int right, char op);
   
   int exp(int base, int exponent);
   int createPowerNode(int first_loc, int exponent);
