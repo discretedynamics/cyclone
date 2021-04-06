@@ -295,7 +295,16 @@ std::string Polynomial::evaluateSymbolic(const std::vector<std::string>& varname
   return strs[mResultLocation];
 }
 
-// helper function for parsePoly
+// findLocation: helper function for parsePoly
+// input: is a substring [begin, end) in str.
+//        op is a operator character (e.g. +, *, ^, ...)
+// returns the location of 'op' if it is a toplevel operator.
+// returns end, if op is not a top level operator.
+// example: op='+', str[begin..<end] = "a+d+(b+c)", then return 3 (+ after d)).
+// example: op='*', str[begin..<end] = "a+d+(b*c)", then returns end (9).
+// example: op='~', str[begin..<end] = "a|~(b|c)", then returns 2.
+//    "a|~(b|c)|d"
+
 int findLocation(const std::string& str, int begin, int end, char op)
 {
   int level = 0;
@@ -319,9 +328,12 @@ int findLocation(const std::string& str, int begin, int end, char op)
   return end;
 }
 
+// parseNumber: helper function for parsePoly
+// returns the number that is in str[begin..<end]
+//   if this is not a number, it throws an error.
 int parseNumber(const std::string &str, int begin, int end)
-{  
-  if (isdigit(str[begin])) {
+{
+  if ((begin < end) and isdigit(str[begin])) {
     //    std::cout << "found number at: " << begin << " and " << end << std::endl;
     size_t lastloc;
     std::string s { str.substr(begin, end-begin) };
@@ -330,7 +342,7 @@ int parseNumber(const std::string &str, int begin, int end)
       throw std::runtime_error("expected the entire string " + s + " to be a number");
     return a;
   }
-  return 0;
+  throw std::runtime_error("expected the entire string " + s + " to be a number");
 }
 
 class PolynomialParser
@@ -374,8 +386,11 @@ private:
 #endif
     
   // parse str[begin]..str[end-1].
+  // return value: is the index in the straight line program of the node created from this string
+  //   if not well-formed, throws an error. (TODO? make this a parse_error, rather than runtime_error)
   int parsePoly(int begin, int end)
   {
+    // handles + at top level, including unary plus.
     // if the top level has a '+', break it at the plus:
     int i = findLocation(mString, begin, end, '+');
     if (i < end) {
@@ -408,6 +423,26 @@ private:
       return mResult.createPowerNode(left, exp);
     }
 
+    // handle ~
+    if (mString[begin] == '~') {
+      int val = parsePoly(begin+1, end);
+      return mResult.createNotNode(val);
+    }
+
+    // TODO MES: START HERE 30 March 2021.
+    // to handle max, min, for instance
+    // look for max symbol (or min)
+    // split up the rest via top level commas.
+    // parse each of those subexpressions, create a max or min node of those expressions.
+    // max(a,b,c) ==> max(max(a,b), c)
+    if (mString[begin] == MAX_OPERATOR or mString[begin] == MIN_OPERATOR)
+      {
+        // strip parens, loop finding last toplevel ,.
+        // build max/min node as we go.
+        // return mResult.createMaxMinNode(mString[begin], i, j);
+      }
+    
+    // str = a+(b*c+d)
     if (mString[begin] == '(') {
       if (mString[end-1] != ')')
         throw std::runtime_error("mismatched parentheses");
@@ -418,7 +453,7 @@ private:
     // check for the string being a number
     if (isdigit(mString[begin])) {
       int a = parseNumber(mString, begin, end);
-      return mResult.constantNode(a);      
+      return mResult.constantNode(a); 
     }
 
     // check for the string being a variable name

@@ -1,3 +1,5 @@
+simFDS = ./simFDS
+
 all:
 	mkdir -p build
 	cd build && cmake -S ../src -B . -DCMAKE_BUILD_TYPE=Release && make
@@ -5,6 +7,8 @@ all:
 clean:
 	rm -rf build 
 
+check: test/eg5.pds
+	${simFDS} test/eg5
 docker:
 	docker build -t discretedynamics/cyclone:0.1.0 .
 

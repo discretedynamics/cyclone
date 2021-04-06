@@ -12,7 +12,10 @@
 // make
 // ./simFDS
 
-// TODO for now:
+// TODO for now (to include NOT, OR, AND, MAX, MIN)
+//   1. create all of these nodes
+//   2. evaluator needs to be able to evaluate these kinds of nodes
+//   3. parser: needs to recognize and translate them
 //   constructor working DONE
 //   add in the create nodes functions DONE
 //   evaluation at a point. DONE
@@ -47,6 +50,9 @@ class Polynomial
   struct operand
   {
     enum { PLUS, TIMES, POWER, OR, NOT, MAX, MIN} op;
+    // make OR ==> MAX
+    // make AND ==> MIN
+    // make NOT ==> a |--> p-1-a
     std::vector<int> args;
   };
   
