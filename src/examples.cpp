@@ -71,6 +71,7 @@ Polynomial examplePoly3()
   return h;
 }
 
+
 void someTests()
 {
   std::vector<std::string> varnames = { "x3", "x", "P53" };

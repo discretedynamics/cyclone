@@ -6,17 +6,22 @@
 #include <iostream>
 #include <regex>
 
-//TODO: created 27 April 2021:
-// disallow and, or if characteristic is not 2.
-// translate max, min to max /min characters (<, >)
-// get this translation to work for parsing any string.
-// do testing of the parser, and then of the program (i.e. evaluator).
-// make tests in perhaps examples.cpp.
-std::string translateAndOrNotXor(const std::string& s)
+std::string translateOperatorNames(const std::string& s)
 {
   // TODO (created 19 Jan 2021: this doesn't handle A or(A and B) (paren after or, and, xor).
   // fix this.  Can this code be simplified?
   // possibly change to a translate(string, word, replacement word) (perhaps no regex here?)
+
+  std::regex m1 ("(\\bMAX )");
+  std::regex m2 ("(\\bmax )");
+  std::regex m3 ("(\\bMAX\\()");
+  std::regex m4 ("(\\bmax\\()");
+
+  std::regex m5 ("(\\bMIN )");
+  std::regex m6 ("(\\bmin )");
+  std::regex m7 ("(\\bMIN\\()");
+  std::regex m8 ("(\\bmin\\()");
+
   std::regex e1 ("(\\bNOT )");
   std::regex e2 ("(\\bnot )");
   std::regex e3 ("(\\bNOT\\()");
@@ -27,15 +32,18 @@ std::string translateAndOrNotXor(const std::string& s)
   std::regex e8 ("(\\bor +)");
   std::regex e9 ("(\\bXOR +)");
   std::regex e10 ("(\\bxor +)");
-  std::vector<std::regex> reps = {e1, e2, e3, e4, e5, e6, e7, e8, e9, e10};
-  std::vector<std::string> strs = {"~", "~", "~(", "~(", "*", "*", "|", "|", "+", "+"};
+  std::vector<std::regex> reps = {m1, m2, m3, m4, m5, m6, m7, m8,
+                                  e1, e2, e3, e4, e5, e6, e7, e8, e9, e10};
+  std::vector<std::string> strs = {">",">",">(",">(",  "<","<","<(","<(",
+                                   "~", "~", "~(", "~(", "*", "*", "|", "|", "+", "+" };
 
   auto result = s;
   for (int i = 0; i < reps.size(); ++i)
     {
       result = std::regex_replace(result, reps[i], strs[i]);
-      std::cout << result << std::endl;
+      //      std::cout << result << std::endl;
     }
+  std::cout << result << std::endl;
   return result;
 }
 
@@ -190,14 +198,6 @@ int Polynomial::createMaxMinNode(int first_loc, int second_loc, char op)
   mEvaluationValues.push_back(0); // make space in evaluation array for the output.
   return mResultLocation;
 }
-
-  // TODO XXX: April 2021
-  // Also in this same todo:
-  // Change 2 evaluators
-  // Change display
-  // Change parser to handle not(...), min(expr1, expr2, ...), max.
-  // Translators from not to ~, etc. (we have this function, might need to
-  //   clean it up.
 
 int Polynomial::exp(int base, int exponent)
 {
@@ -376,12 +376,6 @@ private:
   std::string mString;
   const std::vector<std::string>& mVarNames;
 private:
-  // TODO (19 Jan 2021): make changes to parsing and evaluation necessary to handle boolean functions, max and min calls.
-  //   add in new nodes for SLP.
-  //   add in operators: |, ~, min, max
-  //   preprocess to remove AND, OR, NOT, XOR, give error if used, but not char 2 (at least AND, OR, XOR)
-  //   min(a,b): needs to be handled.
-  //   parsing changes...
 #if 0
   // Just some of our meanderings related to allowing boolean functions
   ~ (& *) | +
@@ -453,12 +447,6 @@ private:
       return mResult.createNotNode(val);
     }
 
-    // TODO MES: START HERE 30 March 2021.
-    // to handle max, min, for instance max(A,B) >(A,B)  TODO
-    // look for max symbol (or min) DONE
-    // split up the rest via top level commas. DONE
-    // parse each of those subexpressions, create a max or min node of those expressions. DONE
-    // max(a,b,c) ==> max(max(a,b), c) DONE
     if (mString[begin] == MAX_OPERATOR or mString[begin] == MIN_OPERATOR)
       {
         

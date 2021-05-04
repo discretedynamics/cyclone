@@ -1,0 +1,11 @@
+NUMBER OF VARIABLES: 4
+NUMBER OF STATES: 3
+
+x = max(y,z)
+y = min(x,y)+1
+z = ~w
+w = x*y+z
+
+# x y z w    
+# 0 1 1 0 => 1 1 2 1
+# 1 1 2 1 => 2 2 1 0

@@ -57,3 +57,15 @@ Cyclone returns the following files by default.
 * PolynomialFDS.hpp
 * State.hpp
 ### In examples/
+
+# Building simFDS
+*  To build simFDS (on linux or mac):
+  *  mkdir -p build
+  *  cd build
+  *  cmake ../src
+  *  make
+  *  ./simFDS
+* create image file from a dot file:
+  * dot -Tpng -o foo.png foo-statespace.dot
+
+        

@@ -5,23 +5,6 @@
 #include <vector>
 #include <iostream>
 
-// To run (on linux or mac):
-// mkdir build
-// cd build
-// cmake ..
-// make
-// ./simFDS
-
-// TODO for now (to include NOT, OR, AND, MAX, MIN)
-//   1. create all of these nodes
-//   2. evaluator needs to be able to evaluate these kinds of nodes
-//   3. parser: needs to recognize and translate them
-//   constructor working DONE
-//   add in the create nodes functions DONE
-//   evaluation at a point. DONE
-//   print function for the polynomial DONE
-//   parse function: string --> creates a polynomial, or gives an intelligible error.
-
 const char MAX_OPERATOR = '>';
 const char MIN_OPERATOR = '<';
 
@@ -107,6 +90,8 @@ public:
 Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, const std::string& str);
 
 int parseNumber(const std::string &str, int begin, int end);
+
+std::string translateOperatorNames(const std::string& s);
 
 #endif
 

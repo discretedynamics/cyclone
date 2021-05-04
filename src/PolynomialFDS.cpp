@@ -41,6 +41,7 @@ PolynomialFDS* readPDS(std::string filename)
 
   for (auto& line : lines)
     {
+      line = translateOperatorNames(line);
       // removes all white space on the line
       line.erase(std::remove_if(line.begin(),
                                 line.end(),

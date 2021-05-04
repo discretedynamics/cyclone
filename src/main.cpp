@@ -1,40 +1,3 @@
-// create image file from a dot file as like:
-//   dot -Tpng -o foo.png foo-statespace.dot
-// TODO (created Jan 2020)
-//   1. add doc tab to algorun
-//   2. bugs in algorun (or wherever...!)
-//   3. change parameters to allow user to select only summary
-//      (want: on, off, auto: auto chooses 'on' if size is reasonable...)
-//   4. don't run simFDS in debug mode!
-//   5. algorun: would like multiple sample input files (e.g. dropdown menu)
-//   6. for running tests, consider using catch2.cpp (unit testing framework), will require changed to CMakeLists.txt
-//   7. boolean format from Claus' examples: need to translate.
-// TODO (created November 2020)
-//   1. source code
-//      a. tests see june 2020 #7
-//   2. web interface (in progress)
-//      a. update algorun_info/manifest.json <-
-//         i. get description from ibrahim about parameters (algo_input, algo_output)
-//         ii. bug fix for missing display of sample files. DONE
-//      b. update input_example, output_example (mostly done, bugfix, maybe change to example with cycle)
-//      c. update run.py must: no-translation, update calls to cyclone (replace with shell script, remove python from dockerfile) DONE
-//   3. dockerize
-//      a. fix Dockerfile (modern cmake, gcc) DONE, "modern" achieved. DONE
-//   4. contact Ibrahim for update to Ubuntu 20.04 (tagged version) (in-progress)
-//   5. node installation via apt repository. (unnesc.)
-//   6. file extension resolve project vs. filename DONE
-// TODO for June 2020
-//   1. DONE: write a function readFDS().  DONE.
-//   2. DONE: incorporate that into `main`, also printing to a file. WORKING ON THIS. Write limit cycle to a file. Use states, not indices.
-//   3. DONE: Write a dot file. DONE
-//   4. test this on some real examples, that we can test "by hand", or "by M2", or by cyclone.
-//   5. create a number of tests (at least 20 examples, with at least the summary answers, some with dot files)
-//   6. try to incorporate this into algorun and plantsimlab.
-//   7. clean up the tests, add a few more tests. test-runner
-//   8. error checking and error display
-//   9. walk through the code and clean/document it
-//   
-
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -48,13 +11,13 @@ void testComma()
 {
   {
     std::vector<std::string> varnames = { "x3", "a", "P53" };
-    Polynomial f = parsePolynomial(varnames, 3, ">(x3,a+P53)");
+    Polynomial f = parsePolynomial(varnames, 3, translateOperatorNames("max(x3,a+P53)"));
     std::cout << f.evaluateSymbolic(varnames) << std::endl;
   }
   
   {
     std::vector<std::string> varnames = { "x3", "a", "P53" };
-    Polynomial f = parsePolynomial(varnames, 3, ">(x3,a+P53,~x3)");
+    Polynomial f = parsePolynomial(varnames, 3, translateOperatorNames("min(x3,a+P53,~x3)"));
     std::cout << f.evaluateSymbolic(varnames) << std::endl;
   }
 }
@@ -151,7 +114,7 @@ void runTrajectoryComputation(std::string projectName, const std::vector<int>& s
   std::vector<long> trajectory;
   std::unordered_map<long, long> hash; //encoded state => position in the trajectory.
   
-  State u(pds->numStates(), startPoint); // TODO: write this constructor.
+  State u(pds->numStates(), startPoint);
   State v(pds->numStates(), pds->numVariables());
 
   hash.insert(std::make_pair(u.getIndex(), 0));
@@ -184,12 +147,12 @@ void runTrajectoryComputation(std::string projectName, const std::vector<int>& s
 
 int main(int argc, char* argv[])
 {
-  // extern std::string translateAndOrNotXor(const std::string& s);
-  // std::cout << translateAndOrNotXor("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d") << std::endl;
-  // std::cout << translateAndOrNotXor("a OR OR b") << std::endl;
+  // std::cout << translateOperatorNames("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d") << std::endl;
+  // std::cout << translateOperatorNames("a OR OR b") << std::endl;
+  // std::cout << translateOperatorNames("max(a,maxmax(b,c))") << std::endl;
+  // testComma();
+  // return 0;
 
-  testComma();
-  return 0;
   if (argc < 2)
     {
       std::cout << "Usage:" << std::endl;
