@@ -50,15 +50,15 @@ class Polynomial
   //  start with
   // [0 1 1 1 0]
 
-  enum class operandType {PLUS, TIMES, POWER, OR, NOT, MAX, MIN};
+  // On 27 April 2021, we decided:
+  // make OR ==> MAX in mNumStates == 2 case
+  // make AND ==> MIN in mNumStates == 2 case
+  // make NOT ==> a |--> p-1-a in all cases.
+  enum class operandType {PLUS, TIMES, POWER, NOT, MAX, MIN};
   
   struct operand
   {
     operandType op;
-    //enum { PLUS, TIMES, POWER, OR, NOT, MAX, MIN} op;
-    // make OR ==> MAX
-    // make AND ==> MIN
-    // make NOT ==> a |--> p-1-a
     std::vector<int> args;
   };
   

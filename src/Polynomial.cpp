@@ -1,11 +1,3 @@
-// TODO for April 13 2021
-// Translate max min to > , <
-// Add in ~
-// Add evaluator functions for these (and any others?)
-// Test parser.
-// Test it all...
-
-
 #include "Polynomial.hpp"
 
 #include <string>
@@ -14,7 +6,12 @@
 #include <iostream>
 #include <regex>
 
-
+//TODO: created 27 April 2021:
+// disallow and, or if characteristic is not 2.
+// translate max, min to max /min characters (<, >)
+// get this translation to work for parsing any string.
+// do testing of the parser, and then of the program (i.e. evaluator).
+// make tests in perhaps examples.cpp.
 std::string translateAndOrNotXor(const std::string& s)
 {
   // TODO (created 19 Jan 2021: this doesn't handle A or(A and B) (paren after or, and, xor).
@@ -79,6 +76,15 @@ std::ostream& Polynomial::debug_display(std::ostream& o) const
           break;
         case operandType::POWER:
           o << "POWER";
+          break;
+        case operandType::MAX:
+          o << "MAX";
+          break;
+        case operandType::MIN:
+          o << "MIN";
+          break;
+        case operandType::NOT:
+          o << "NOT";
           break;
         }
       for (auto a : mOperands[i].args)
@@ -168,20 +174,7 @@ int Polynomial::createOrNode(int first_loc, int second_loc)
 
 int Polynomial::createNotNode(int first_loc)
 {
-  // TODO XXX: 9 Feb 2021.  Ask Adam, what should it be?
   mResultLocation = mEvaluationValues.size();
-
-  // TODO XXX: get this part functional too.
-  // if (first_loc == 0) // NOT 0
-  //   mResultLocation = p-1 - a;
-  // else if (first_loc == 1) // NOT 1
-  //   mResultLocation = 1;
-  // else if (isConstantLocation(first_loc)) // NOT const
-  //   {
-  //     // evaluate now, because they are constants
-  //     mResultLocation = exp(first_loc, exponent);
-  //   }
-
   std::vector<int> args { first_loc };
   mOperands.push_back({operandType::NOT, args});
   mEvaluationValues.push_back(0); // make space in evaluation array for the output.
@@ -273,6 +266,17 @@ int Polynomial::evaluate(const int pt[]) {
       case operandType::POWER:
         mEvaluationValues[i] = exp(mEvaluationValues[a.args[0]], a.args[1]);
         break;
+      case operandType::MAX:
+        mEvaluationValues[i] = std::max(mEvaluationValues[a.args[0]],
+                                        mEvaluationValues[a.args[1]]);
+        break;
+      case operandType::MIN:
+        mEvaluationValues[i] = std::min(mEvaluationValues[a.args[0]],
+                                        mEvaluationValues[a.args[1]]);
+        break;
+      case operandType::NOT:
+        mEvaluationValues[i] = mNumStates - 1 - mEvaluationValues[a.args[0]];
+        break;
       }
     }
   return mEvaluationValues[mResultLocation];
@@ -300,6 +304,15 @@ std::string Polynomial::evaluateSymbolic(const std::vector<std::string>& varname
       case operandType::POWER:
         strs.push_back("(" + strs[a.args[0]] + "^" + std::to_string(a.args[1]) + ")");
         break;
+      case operandType::MAX:
+        strs.push_back("max(" + strs[a.args[0]] + "," + strs[a.args[1]] + ")");
+        break;
+      case operandType::MIN:
+        strs.push_back("min(" + strs[a.args[0]] + "," + strs[a.args[1]] + ")");
+        break;
+      case operandType::NOT:
+        strs.push_back("(~" + strs[a.args[0]] + ")");
+        break;
       }
     }
   return strs[mResultLocation];
@@ -307,10 +320,11 @@ std::string Polynomial::evaluateSymbolic(const std::vector<std::string>& varname
 
 // findLocation: helper function for parsePoly
 // input: is a substring [begin, end) in str.
-//        op is a operator character (e.g. +, *, ^, ...)
-// returns the location of 'op' if it is a toplevel operator.
+//        op is a operator character (e.g. +, *, ^, ...) and comma.
+// returns the rightmost location of 'op' if it is a toplevel operator.
 // returns end, if op is not a top level operator.
 // example: op='+', str[begin..<end] = "a+d+(b+c)", then return 3 (+ after d)).
+// example: op=',', str[begin..<end] = "a,d,(b,c)", then return 3 (, after d)).
 // example: op='*', str[begin..<end] = "a+d+(b*c)", then returns end (9).
 // example: op='~', str[begin..<end] = "a|~(b|c)", then returns 2.
 //    "a|~(b|c)|d"
@@ -458,8 +472,10 @@ private:
         }
 
         // collect commas (and "begin", "end" locations too)
+        // after the reverse:
+        // e.g. ">(a+b+c,b,c*d)": commas: 1 3 7 9 13
         std::vector<int> commas;
-        commas.push_back(begin+1);
+        commas.push_back(end-1); // one past the last expression
         int current_end = end-1;
         while (true)
           {
@@ -468,7 +484,8 @@ private:
             commas.push_back(comma);
             current_end = comma;
           }
-        commas.push_back(end-1);
+        commas.push_back(begin+1); // one before the first expression
+        std::reverse(commas.begin(),commas.end());
         
         if (commas.size() == 2)
           throw std::runtime_error("max/min operator needs two arguments");

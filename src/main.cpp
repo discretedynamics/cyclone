@@ -44,6 +44,21 @@
 #include "Polynomial.hpp"
 #include "PolynomialFDS.hpp"
 
+void testComma()
+{
+  {
+    std::vector<std::string> varnames = { "x3", "a", "P53" };
+    Polynomial f = parsePolynomial(varnames, 3, ">(x3,a+P53)");
+    std::cout << f.evaluateSymbolic(varnames) << std::endl;
+  }
+  
+  {
+    std::vector<std::string> varnames = { "x3", "a", "P53" };
+    Polynomial f = parsePolynomial(varnames, 3, ">(x3,a+P53,~x3)");
+    std::cout << f.evaluateSymbolic(varnames) << std::endl;
+  }
+}
+
 void runStateSpaceComputation(std::string projectName, bool write_dot_file)
 {
   PolynomialFDS* pds = readPDS(projectName + ".pds");
@@ -172,7 +187,9 @@ int main(int argc, char* argv[])
   // extern std::string translateAndOrNotXor(const std::string& s);
   // std::cout << translateAndOrNotXor("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d") << std::endl;
   // std::cout << translateAndOrNotXor("a OR OR b") << std::endl;
-  
+
+  testComma();
+  return 0;
   if (argc < 2)
     {
       std::cout << "Usage:" << std::endl;
