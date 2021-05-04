@@ -18,6 +18,38 @@
       "personal_website": "http://facultydirectory.uchc.edu/profile?profileId=Laubenbacher-Reinhard",
       "organization": "Center for Quantitative Medicine",
       "org_website": "http://cqm.uchc.edu/"
+    },
+    {
+      "name": "Elena Dimitrova",
+      "email": "edimitro@calpoly.edu",
+      "profile_picture": "",
+      "personal_website": "https://math.calpoly.edu/elena-dimitrova",
+      "organization": "Cal Poly",
+      "org_website": ""
+    },
+    {
+      "name": "Adam Knapp",
+      "email": "Adam.Knapp@medicine.ufl.edu",
+      "profile_picture": "",
+      "personal_website": "",
+      "organization": "University of Florida",
+      "org_website": ""
+    },
+    {
+      "name": "Brandilyn Stigler",
+      "email": "bstigler@smu.edu",
+      "profile_picture": "",
+      "personal_website": "https://www.smu.edu/Dedman/Academics/Departments/Math/People/Faculty/BrandilynStigler",
+      "organization": "Southern Methodist University",
+      "org_website": ""
+    },
+    {
+      "name": "Michael Stillman",
+      "email": "mike@math.cornell.edu",
+      "profile_picture": "",
+      "personal_website": "https://math.cornell.edu/michael-e-stillman",
+      "organization": "Cornell University",
+      "org_website": ""
     }
   ],
   "algo_packager": {
@@ -38,7 +70,8 @@
       { "name": "statespace", "src": "project-statespace.dot", "type": "text/plain", "format": "AnnotatedGraph" }
   ],
   "algo_parameters": { 
-    "caching": "on"
+    "cache": "on",
+    "summary only": "off"
   },
   "algo_image": "algorun/cyclone"
 }
