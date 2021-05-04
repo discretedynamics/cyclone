@@ -2,10 +2,10 @@
   "manifest_version": "2.0",
   "algo_name": "Cyclone",
   "algo_version": "1.0.0",
-  "algo_summary": "Calculate Dynamics of a discrete dynamical system using exhaustive search",
-  "algo_description": "",
+  "algo_summary": "Simulation and analysis of finite dynamical systems",
+  "algo_description": "Cyclone simulates the complete state space for an input finite dynamical system (FDS) and finds all attractors (steady states and limit cycles), together with statistics about the size of components.  An input is a plain-text file containing an n-dimensional FDS f = (f1,...,fn), where each fi is a polynomial in K[x1, ..., xn] and K is a finite field with cardinality p. The number of variables n can be any positive integer. The number of states p can be any prime integer. Variable names can be any string without spaces.  Cyclone returns the following: state space, summary, and visualization. The user can select to view the summary only, which is useful for large systems.  See https://github.com/discretedynamics/cyclone for more details about inputs and outputs.",
   "algo_website": "https://github.com/discretedynamics/cyclone",
-  "algo_keywords": ["finite dynamical system", "cell biology"],
+  "algo_keywords": ["finite dynamical system", "systems biology"],
   "published_paper": {
     "title": "",
     "url": ""
