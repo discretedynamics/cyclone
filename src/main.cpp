@@ -22,9 +22,19 @@ void testComma()
   }
 }
 
+bool hasExtension(const std::string &name, const std::string &extension) {
+  return name.size() >= extension.size() &&
+    name.compare(name.size() - extension.size(),
+                 extension.size(),
+                 extension) == 0;
+}
+
 void runStateSpaceComputation(std::string projectName, bool write_dot_file)
 {
-  PolynomialFDS* pds = readPDS(projectName + ".pds");
+ 
+  std::string fileName = (hasExtension(projectName, ".pds") ?
+                          projectName : (projectName + ".pds"));
+  PolynomialFDS* pds = readPDS(fileName);
 
   std::vector<long> stateSpace = computeStateSpace(*pds);
   auto limitCycleInfo = computeComponentsAndCycles(stateSpace);
@@ -102,7 +112,9 @@ void runTrajectoryComputation(std::string projectName, const std::vector<int>& s
 
   std::cout << "running trajectory computation" << std::endl;
 
-  PolynomialFDS* pds = readPDS(projectName + ".pds");
+  std::string fileName = (hasExtension(projectName, ".pds") ?
+                          projectName : (projectName + ".pds"));
+  PolynomialFDS* pds = readPDS(fileName);
 
   if (startPoint.size() != pds->numVariables())
     {
