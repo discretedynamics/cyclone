@@ -24,14 +24,14 @@ project(simFDS)
 #  )
 
 set(SOURCES
-  State.hpp
-  Polynomial.hpp
-  Polynomial.cpp
-  PolynomialFDS.hpp
-  PolynomialFDS.cpp
-  examples.hpp
-  examples.cpp
-  main.cpp
+  src/State.hpp
+  src/Polynomial.hpp
+  src/Polynomial.cpp
+  src/PolynomialFDS.hpp
+  src/PolynomialFDS.cpp
+  src/examples.hpp
+  src/examples.cpp
+  src/main.cpp
   )
 
 add_executable(simFDS ${SOURCES})
@@ -51,3 +51,23 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     #  -Wno-cast-qual # not needed for appleclang
     )
 endif()
+
+# tests
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v2.13.1)
+
+FetchContent_MakeAvailable(Catch2)
+
+add_executable(tests
+  src/test.cpp
+  src/State.hpp
+  src/Polynomial.hpp
+  src/Polynomial.cpp
+  src/PolynomialFDS.hpp
+  src/PolynomialFDS.cpp)
+target_link_libraries(tests PRIVATE Catch2::Catch2)
+

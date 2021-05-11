@@ -16,7 +16,7 @@ ADD ./src /home/algorithm/src/
 # Install any algorithm dependencies here
 RUN mkdir /home/algorithm/build && \
 cd /home/algorithm/build && \
-cmake -DCMAKE_BUILD_TYPE=Release ../src/ && \
+cmake -DCMAKE_BUILD_TYPE=Release ../ && \
 make && \
 mv /home/algorithm/build/simFDS /usr/bin/ && \
 mv /home/algorithm/src/runner.sh /usr/bin/
@@ -24,5 +24,6 @@ mv /home/algorithm/src/runner.sh /usr/bin/
 #RUN apt-get update && \
 #apt-get install -y python
 
+# ACK: maintainer is deprecated, see https://docs.docker.com/engine/reference/builder/
 # [Optional] Sign your image
 MAINTAINER Abdelrahman Hosny <abdelrahman.hosny@hotmail.com>
