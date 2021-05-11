@@ -59,13 +59,16 @@ Cyclone returns the following files by default.
 ### In examples/
 
 # Building simFDS
-*  To build simFDS (on linux or mac):
-  *  mkdir -p build
-  *  cd build
-  *  cmake ../src
-  *  make
-  *  ./simFDS
+
+* To build simFDS (on linux or mac):
+    ```
+    mkdir -p build
+    cd build
+    cmake ..
+    make
+    ./simFDS
+    ```
 * create image file from a dot file:
-  * dot -Tpng -o foo.png foo-statespace.dot
+    `dot -Tpng -o foo.png foo-statespace.dot`
 
         
