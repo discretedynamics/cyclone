@@ -150,3 +150,24 @@ TEST_CASE( "Misc", "[poly]") {
   }
 
 }
+
+
+TEST_CASE( "Comma") {
+
+  SECTION( "Single comma" ) {
+    std::vector<std::string> varnames = { "x3", "a", "P53" };
+    Polynomial f = parsePolynomial(varnames, 3, translateOperatorNames("max(x3,a+P53)"));
+    REQUIRE( f.evaluateSymbolic(varnames).compare("max(x3,(a+P53))") == 0 );
+  }
+
+  SECTION( "Pair of commas" ) {
+    std::vector<std::string> varnames = { "x3", "a", "P53" };
+    Polynomial f = parsePolynomial(varnames, 3, translateOperatorNames("min(x3,a+P53,~x3)"));
+    REQUIRE( f.evaluateSymbolic(varnames).compare("min(min(x3,(a+P53)),(~x3))") == 0 );
+  }
+  
+}
+
+  // std::cout << translateOperatorNames("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d") << std::endl;
+  // std::cout << translateOperatorNames("a OR OR b") << std::endl;
+  // std::cout << translateOperatorNames("max(a,maxmax(b,c))") << std::endl;

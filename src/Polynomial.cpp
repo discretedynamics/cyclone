@@ -43,7 +43,7 @@ std::string translateOperatorNames(const std::string& s)
       result = std::regex_replace(result, reps[i], strs[i]);
       //      std::cout << result << std::endl;
     }
-  std::cout << result << std::endl;
+  // std::cout << result << std::endl;
   return result;
 }
 

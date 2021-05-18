@@ -1,0 +1,11 @@
+Number of cycles (components): 1
+
+COMPONENT #1:
+  component size: 4
+  cycle of length 4: 
+    [0 0] -> 
+    [1 0] -> 
+    [1 1] -> 
+    [0 1] -> 
+    [0 0]
+

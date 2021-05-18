@@ -7,21 +7,6 @@
 #include "Polynomial.hpp"
 #include "PolynomialFDS.hpp"
 
-void testComma()
-{
-  {
-    std::vector<std::string> varnames = { "x3", "a", "P53" };
-    Polynomial f = parsePolynomial(varnames, 3, translateOperatorNames("max(x3,a+P53)"));
-    std::cout << f.evaluateSymbolic(varnames) << std::endl;
-  }
-  
-  {
-    std::vector<std::string> varnames = { "x3", "a", "P53" };
-    Polynomial f = parsePolynomial(varnames, 3, translateOperatorNames("min(x3,a+P53,~x3)"));
-    std::cout << f.evaluateSymbolic(varnames) << std::endl;
-  }
-}
-
 bool hasExtension(const std::string &name, const std::string &extension) {
   return name.size() >= extension.size() &&
     name.compare(name.size() - extension.size(),
@@ -34,6 +19,9 @@ void runStateSpaceComputation(std::string projectName, bool write_dot_file)
  
   std::string fileName = (hasExtension(projectName, ".pds") ?
                           projectName : (projectName + ".pds"));
+  if(hasExtension(projectName, ".pds")) {
+    projectName = projectName.substr(0, projectName.length()-4);
+  }
   PolynomialFDS* pds = readPDS(fileName);
 
   std::vector<long> stateSpace = computeStateSpace(*pds);
@@ -114,6 +102,9 @@ void runTrajectoryComputation(std::string projectName, const std::vector<int>& s
 
   std::string fileName = (hasExtension(projectName, ".pds") ?
                           projectName : (projectName + ".pds"));
+  if(hasExtension(projectName, ".pds")) {
+    projectName = projectName.substr(0, projectName.length()-4);
+  }
   PolynomialFDS* pds = readPDS(fileName);
 
   if (startPoint.size() != pds->numVariables())
@@ -159,12 +150,6 @@ void runTrajectoryComputation(std::string projectName, const std::vector<int>& s
 
 int main(int argc, char* argv[])
 {
-  // std::cout << translateOperatorNames("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d") << std::endl;
-  // std::cout << translateOperatorNames("a OR OR b") << std::endl;
-  // std::cout << translateOperatorNames("max(a,maxmax(b,c))") << std::endl;
-  // testComma();
-  // return 0;
-
   if (argc < 2)
     {
       std::cout << "Usage:" << std::endl;

@@ -41,6 +41,9 @@ PolynomialFDS* readPDS(std::string filename)
 
   for (auto& line : lines)
     {
+      if (line.size() == 0) continue;
+      if (line[0] == '#') continue;
+
       line = translateOperatorNames(line);
       // removes all white space on the line
       line.erase(std::remove_if(line.begin(),
@@ -48,9 +51,6 @@ PolynomialFDS* readPDS(std::string filename)
                                 [](unsigned char x) { return std::isspace(x); }
                                 ),
                  line.end());
-
-      if (line.size() == 0) continue;
-      if (line[0] == '#') continue;
 
       // is this a : line or = line, where is the location of that?
       auto colon = line.find_first_of(":"); // returns a giant number if not found.
