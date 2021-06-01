@@ -62,7 +62,9 @@ inline std::ostream& operator<<(std::ostream& o, PolynomialFDS f)
   f.display(o);
   return o;
 }
-  
+
+PolynomialFDS* readPDS(std::vector<std::string> lines);
+PolynomialFDS* readPDS(std::istream& ifile);
 PolynomialFDS* readPDS(std::string filename);
 
 std::vector<long> computeStateSpace(PolynomialFDS& FDS);

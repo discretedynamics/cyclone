@@ -2,7 +2,7 @@ simFDS = ./simFDS
 
 all:
 	mkdir -p build
-	cd build && cmake -S ../src -B . -DCMAKE_BUILD_TYPE=Release && make
+	cd build && cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release && make
 
 clean:
 	rm -rf build 

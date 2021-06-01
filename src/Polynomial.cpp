@@ -541,7 +541,7 @@ public:
 
 Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, const std::string& str)
 {
-  PolynomialParser P(varnames, numstates, str);
+  PolynomialParser P(varnames, numstates, translateOperatorNames(str));
   return P.value();
 }
 // Local Variables:

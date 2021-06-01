@@ -19,20 +19,28 @@ void PolynomialFDS::evaluate(const int u[], int output[])
     }
 }
 
-PolynomialFDS* readPDS(std::string filename)
-{
+PolynomialFDS* readPDS(const std::string filename) {
+
   // Step1: read in the file as a list of lines.
-  std::ifstream ifil;
-  ifil.open(filename);
+  std::ifstream ifil(filename);
   if (not ifil.is_open())
     throw std::runtime_error("failed to open file: " + filename);
+
+  return readPDS(ifil); // RAII closes file
+}
+
+PolynomialFDS* readPDS(std::istream& ifile)
+{
+  // todo: add in some error checking. throw an error if a problem.
   std::vector<std::string> lines;
   std::string thisline;
-  // todo: add in some error checking. throw an error if a problem.
-  while (getline(ifil, thisline))
+  while (getline(ifile, thisline))
     lines.push_back(thisline);
-  ifil.close();
+  return readPDS(lines);
+}
 
+PolynomialFDS* readPDS(std::vector<std::string> lines)
+{
   // Loop through the lines one by one:
   int numstates = -1;
   int numvars = -1;

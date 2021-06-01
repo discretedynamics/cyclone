@@ -15,6 +15,7 @@ TODO: created 27 April 2021, modified 4 May 2021
     * test-runner
         * create a number of tests (at least 20 examples, with at least the summary answers, some with dot files)
         * boolean format from Claus' examples: need to translate.
+    * make ctest configuration file?
  * error checking and error display (i.e. useful error checking for input data, to send back to the user)
  * walk through the code and clean/document it
     
