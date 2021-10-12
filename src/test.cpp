@@ -115,6 +115,73 @@ TEST_CASE( "Min", "[poly]" ) {
 
 
 
+TEST_CASE( "And", "[poly]" ) {
+  
+  std::vector<std::string> varnames = { "x", "y", "z" };
+  Polynomial f = parsePolynomial(varnames, 2, "x AND y AND z");
+  
+  SECTION( "Symbolic evaluation" ) {
+    REQUIRE( f.evaluateSymbolic(varnames) == "((x*y)*z)" );
+  }
+
+  SECTION( "Numerical evaluation" ) {
+    for( int r = 0; r < 2; r++) {
+      for( int s = 0; s < 2; s++) {
+        for( int t = 0; t < 2; t++) {
+          int params [3] = {r, s, t};
+          REQUIRE( f.evaluate(params) == (r*s*t)%2 );
+        }
+      }
+    }
+  }
+}
+
+
+TEST_CASE( "XOR", "[poly]" ) {
+  
+  std::vector<std::string> varnames = { "x", "y", "z" };
+  Polynomial f = parsePolynomial(varnames, 2, "x XOR y XOR z");
+  
+  SECTION( "Symbolic evaluation" ) {
+    REQUIRE( f.evaluateSymbolic(varnames) == "((x+y)+z)" );
+  }
+
+  SECTION( "Numerical evaluation" ) {
+    for( int r = 0; r < 2; r++) {
+      for( int s = 0; s < 2; s++) {
+        for( int t = 0; t < 2; t++) {
+          int params [3] = {r, s, t};
+          REQUIRE( f.evaluate(params) == (r+s+t)%2 );
+        }
+      }
+    }
+  }
+}
+
+
+TEST_CASE( "Or", "[poly]" ) {
+  
+  std::vector<std::string> varnames = { "x", "y", "z" };
+  Polynomial f = parsePolynomial(varnames, 2, "x OR y OR z");
+  
+  SECTION( "Symbolic evaluation" ) {
+    REQUIRE( f.evaluateSymbolic(varnames) == "max(max(x,y),z)" );
+  }
+
+  SECTION( "Numerical evaluation" ) {
+    for( int r = 0; r < 2; r++) {
+      for( int s = 0; s < 2; s++) {
+        for( int t = 0; t < 2; t++) {
+          int params [3] = {r, s, t};
+          REQUIRE( f.evaluate(params) == (r|s|t) );
+        }
+      }
+    }
+  }
+}
+
+
+
 TEST_CASE( "Misc", "[poly]") {
   std::vector<std::string> varnames = { "x3", "x", "P53" };
   Polynomial f = parsePolynomial(varnames, 3, "x3 + P53*( 1 + x)");
@@ -245,6 +312,6 @@ TEST_CASE( "examplePoly", "[poly]" ) {
 }
 
 
-  // std::cout << translateOperatorNames("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d") << std::endl;
-  // std::cout << translateOperatorNames("a OR OR b") << std::endl;
-  // std::cout << translateOperatorNames("max(a,maxmax(b,c))") << std::endl;
+  // std::cout << translateOperatorNames("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d", 2) << std::endl;
+  // std::cout << translateOperatorNames("a OR OR b", 2) << std::endl;
+  // std::cout << translateOperatorNames("max(a,maxmax(b,c))", 3) << std::endl;

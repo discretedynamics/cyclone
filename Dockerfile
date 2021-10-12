@@ -8,10 +8,11 @@ apt-get install -y wget build-essential cmake && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN apt-get update && apt-get install -y graphviz
+RUN apt-get update && apt-get install -y graphviz git
 
 ADD ./algorun_info /home/algorithm/web/algorun_info/
 ADD ./src /home/algorithm/src/
+COPY ./CMakeLists.txt /home/algorithm/
 
 # Install any algorithm dependencies here
 RUN mkdir /home/algorithm/build && \

@@ -52,7 +52,10 @@ PolynomialFDS* readPDS(std::vector<std::string> lines)
       if (line.size() == 0) continue;
       if (line[0] == '#') continue;
 
-      line = translateOperatorNames(line);
+      // use the permissive value for numstates if unset, does not change numstates.
+      // needed since numstates won't be set before the number of states is read in
+      // when you are on the actual formula lines, numstates should be set correctly
+      line = translateOperatorNames(line, numstates == -1 ? 2 : numstates); 
       // removes all white space on the line
       line.erase(std::remove_if(line.begin(),
                                 line.end(),

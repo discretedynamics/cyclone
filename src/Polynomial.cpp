@@ -6,12 +6,13 @@
 #include <iostream>
 #include <regex>
 
-std::string translateOperatorNames(const std::string& s)
+std::string translateOperatorNames(const std::string& s, int characteristic)
 {
   // TODO (created 19 Jan 2021: this doesn't handle A or(A and B) (paren after or, and, xor).
   // fix this.  Can this code be simplified?
   // possibly change to a translate(string, word, replacement word) (perhaps no regex here?)
 
+  // Oct 12, 2021: Not allowing AND/OR is characteristic != 2, but this isn't where it will fail.
   std::regex m1 ("(\\bMAX )");
   std::regex m2 ("(\\bmax )");
   std::regex m3 ("(\\bMAX\\()");
@@ -22,28 +23,47 @@ std::string translateOperatorNames(const std::string& s)
   std::regex m7 ("(\\bMIN\\()");
   std::regex m8 ("(\\bmin\\()");
 
-  std::regex e1 ("(\\bNOT )");
-  std::regex e2 ("(\\bnot )");
-  std::regex e3 ("(\\bNOT\\()");
-  std::regex e4 ("(\\bnot\\()");
-  std::regex e5 ("(\\bAND) +");
-  std::regex e6 ("(\\band) +");
-  std::regex e7 ("(\\bOR +)");
-  std::regex e8 ("(\\bor +)");
-  std::regex e9 ("(\\bXOR +)");
-  std::regex e10 ("(\\bxor +)");
-  std::vector<std::regex> reps = {m1, m2, m3, m4, m5, m6, m7, m8,
-                                  e1, e2, e3, e4, e5, e6, e7, e8, e9, e10};
-  std::vector<std::string> strs = {">",">",">(",">(",  "<","<","<(","<(",
-                                   "~", "~", "~(", "~(", "*", "*", "|", "|", "+", "+" };
+  std::regex m9 ("(\\bNOT )");
+  std::regex m10 ("(\\bnot )");
+  std::regex m11 ("(\\bNOT\\()");
+  std::regex m12 ("(\\bnot\\()");
+
+  std::vector<std::regex> mreps =  { m1,  m2,   m3,   m4,  m5,  m6,   m7,   m8,  m9, m10,  m11,  m12};
+  std::vector<std::string> mstrs = {">", ">", ">(", ">(", "<", "<", "<(", "<(", "~", "~", "~(", "~("};
 
   auto result = s;
-  for (int i = 0; i < reps.size(); ++i)
+  for (int i = 0; i < mreps.size(); ++i)
     {
-      result = std::regex_replace(result, reps[i], strs[i]);
-      //      std::cout << result << std::endl;
+      result = std::regex_replace(result, mreps[i], mstrs[i]);
     }
-  // std::cout << result << std::endl;
+  
+  std::regex e1 ("(\\bAND) +");
+  std::regex e2 ("(\\band) +");
+  std::regex e3 ("(\\bOR +)");
+  std::regex e4 ("(\\bor +)");
+  std::regex e5 ("(\\bXOR +)");
+  std::regex e6 ("(\\bxor +)");
+
+  std::vector<std::regex> ereps =  {  e1,  e2,  e3,  e4,  e5,  e6};
+  std::vector<std::string> estrs = { "*", "*", "|", "|", "+", "+"};
+
+  // if char=2 search and replace, if char!=2 search and error
+  if (characteristic == 2)
+    {
+      for (int i = 0; i < ereps.size(); ++i)
+        {
+          result = std::regex_replace(result, ereps[i], estrs[i]);
+        }
+    }
+  else
+    {
+      for (int i = 0; i < ereps.size(); ++i)
+        {
+          if(std::regex_search(result, ereps[i]))
+            throw std::runtime_error("characteristic 2 needed for AND/OR/XOR");
+        }
+    }
+  
   return result;
 }
 
@@ -421,6 +441,16 @@ private:
       return mResult.createPlusNode(left, right);
     }
 
+    i = findLocation(mString, begin, end, '|'); // OR
+    if (i < end) {
+      //      std::cout << "found | at: " << i << std::endl;
+      if (i == begin or i == end-1)
+        throw std::runtime_error("| needs two expressions");
+      int left = parsePoly(begin,i);
+      int right = parsePoly(i+1,end);
+      return mResult.createOrNode(left, right);
+    }
+    
     i = findLocation(mString, begin, end, '*');
     if (i < end) {
       //      std::cout << "found * at: " << i << std::endl;
@@ -541,7 +571,7 @@ public:
 
 Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstates, const std::string& str)
 {
-  PolynomialParser P(varnames, numstates, translateOperatorNames(str));
+  PolynomialParser P(varnames, numstates, translateOperatorNames(str, numstates));
   return P.value();
 }
 // Local Variables:

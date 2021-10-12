@@ -91,7 +91,7 @@ Polynomial parsePolynomial(const std::vector<std::string>& varnames, int numstat
 
 int parseNumber(const std::string &str, int begin, int end);
 
-std::string translateOperatorNames(const std::string& s);
+std::string translateOperatorNames(const std::string& s, int characteristic);
 
 #endif
 

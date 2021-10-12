@@ -1,0 +1,14 @@
+Number of cycles (components): 2
+
+COMPONENT #1:
+  component size: 7
+  cycle of length 3: 
+    [0 1 1] -> 
+    [1 1 1] -> 
+    [1 0 0] -> 
+    [0 1 1]
+
+COMPONENT #2:
+  component size: 1
+  fixed point: [1 1 0]
+
