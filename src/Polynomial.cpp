@@ -226,8 +226,8 @@ int Polynomial::exp(int base, int exponent)
   int val = 1;
   for (int i=0; i<exponent; i++) 
     {
-      val *= base;
-      val = val % mNumStates;
+      long thisval = val * base;
+      val = thisval % mNumStates;
     }
   return val;
 }
