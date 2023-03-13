@@ -221,11 +221,14 @@ int Polynomial::createMaxMinNode(int first_loc, int second_loc, char op)
 
 int Polynomial::exp(int base, int exponent)
 {
-  // Only handles exponents >= 1
+  // Only handles exponents >= 0
   // does no optimization.
   int val = 1;
-  for (int i=0; i<exponent; i++) val *= base;
-  val = val % mNumStates;
+  for (int i=0; i<exponent; i++) 
+    {
+      val *= base;
+      val = val % mNumStates;
+    }
   return val;
 }
   
