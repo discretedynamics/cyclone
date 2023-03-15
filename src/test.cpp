@@ -323,6 +323,9 @@ TEST_CASE( "exp", "[exp]") {
   REQUIRE( f.exp(2,8) == 1 );
   REQUIRE( f.exp(2,9) == 2 );
 
+  Polynomial g(11,1); // 11 states, 1 variable
+  REQUIRE( g.exp(2,123456789) == g.exp(2,9) );
+
 }
 
   // std::cout << translateOperatorNames("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d", 2) << std::endl;
