@@ -312,6 +312,22 @@ TEST_CASE( "examplePoly", "[poly]" ) {
 }
 
 
+TEST_CASE( "exp", "[exp]") {
+
+  Polynomial f(3, 1); // 3 states, 1 variable
+  REQUIRE( f.exp(1,7) == 1 );
+  REQUIRE( f.exp(1,8) == 1 );
+  REQUIRE( f.exp(1,9) == 1 );
+
+  REQUIRE( f.exp(2,7) == 2 );
+  REQUIRE( f.exp(2,8) == 1 );
+  REQUIRE( f.exp(2,9) == 2 );
+
+  Polynomial g(11,1); // 11 states, 1 variable
+  REQUIRE( g.exp(2,123456789) == g.exp(2,9) );
+
+}
+
   // std::cout << translateOperatorNames("NOT (x NOTX  AND NOT(b)) xor sdda and  not c OR d", 2) << std::endl;
   // std::cout << translateOperatorNames("a OR OR b", 2) << std::endl;
   // std::cout << translateOperatorNames("max(a,maxmax(b,c))", 3) << std::endl;
