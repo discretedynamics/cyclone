@@ -47,8 +47,10 @@ PolynomialFDS* readPDS(std::vector<std::string> lines)
   std::vector<std::string> varnames;
   std::vector<std::string> polystrs;
 
-  for (auto& line : lines)
+  for (std::size_t line_no = 0; line_no < lines.size(); ++line_no)
     {
+      auto& line = lines[line_no];
+      
       if (line.size() == 0) continue;
       if (line[0] == '#') continue;
 
@@ -99,7 +101,7 @@ PolynomialFDS* readPDS(std::vector<std::string> lines)
           polystrs.push_back(line.substr(equals+1, line.size()));
           continue;
         }
-      throw std::runtime_error("unexpected line format on line");
+      throw std::runtime_error("unexpected line format on line " + std::to_string(line_no));
     }
   
   if (numvars >= 0 and varnames.size() != numvars)
