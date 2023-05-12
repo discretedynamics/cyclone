@@ -89,7 +89,7 @@ PolynomialFDS* readPDS(std::vector<std::string> lines)
               //   throw std::runtime_error("expected the number of states to be a prime number");
               continue;
             }
-          throw std::runtime_error("unexpected colon on line");
+          throw std::runtime_error("unexpected colon on line " + std::to_string(line_no));
         }
 
       // at this point, we had better have a string of the form "var=poly"      
