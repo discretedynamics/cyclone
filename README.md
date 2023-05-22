@@ -21,7 +21,7 @@ A plain text file containing an _n_-dimensional finite dynamical system _f_ = (_
 where each _f<sub>i</sub>_ is a polynomial in _F<sub>p</sub>_[_x_<sub>1</sub>, ..., _x<sub>n</sub>_] and _F<sub>p</sub>_ is a finite field with cardinality _p_.
 The number of variables _n_ can be any positive integer.
 The number of states _p_ can be any prime integer.
-Variable names can be any string without spaces.
+
 
 ### Example file
 ```
@@ -37,38 +37,36 @@ The first line is a commented line that users can describe their file.  The code
 
 The next two lines are read by the code: the numbers at the ends of the lines can be changed by the user.
 
-The subsequent lines contain the equations for the finite dynamical system.
+The subsequent lines contain the functions determining the finite dynamical system.  The function for a variable is represented as ```variable_name = function_expression```. 
+* Variable names can be any string without spaces.
+* Function expressions can include 
+    * ```+``` (addition), ```*``` (multiplication), ```^``` (exponentiation), ```MAX``` (maximum of a parenthesized list of variables), ```MIN``` (mimimum of a parenthesized list of variables), ```NOT``` (_x_+ NOT _x_ = _p_-1).
+    * Boolean only (_p_=2): ```AND``` or ```+```, ```OR``` or ```|```, ```XOR``` or ```+```
+    * All caps or lowercase is accepted for MAX, MIN, NOT, AND, OR, XOR. 
 
+### Running Cyclone from the command line 
+```simFDS <project-name>.pds```
+See ** note below. 
 
 ### Outputs
 Cyclone returns the following files by default.
-* state space
-* summary
-* visualization
-### Running Cyclone from the command line
-```simFDS <project-name>```
+* ```<project-name>-statespace.dot```: a plain-text file containing the state space of the finite dynamical system _f_. The state space of _f_ is a directed graph with vertex the _n_-tuples with entries in _F<sub>p</sub>_ and edges a --> b iff _f_(a)=b.  The file is formatted as an input to the ```dot``` layout engine in the open source graph visualization software Graphviz.  
+*  ```<project-name>-limitcycles.txt```: a plain-text file containing the number of components (basin of attraction + attractor) in the state space graph; the size of each component; and the states that form the limit cycle (attractor).  
 
-## Files
-### In src/
-* main.cpp
-* Polynomial.cpp
-* Polynomial.hpp
-* PolynomialFDS.cpp
-* PolynomialFDS.hpp
-* State.hpp
-### In examples/
+The following options are useful for large networks.
+* ```--summary``` returns only the limit cycle file.  
+* ```–-trajectory a1 a2 ... an``` returns only produces the portion of the state space beginning at the given initial state ```a1 a2 ... an``` and ending at the associated limit cycle.
 
-# Building simFDS
+To create an image file from the dot file:
+    ```dot -Tpng -o <project-name>.png <project-name>-statespace.dot```
 
-* To build simFDS (on linux or mac):
-    ```
-    mkdir -p build
-    cd build
-    cmake ..
-    make
-    ./simFDS
-    ```
-* create image file from a dot file:
-    `dot -Tpng -o foo.png foo-statespace.dot`
-
-        
+## Building the Executable
+To build the Cyclone executable ```simFDS``` (on linux or mac):
+```  
+mkdir -p build
+cd build
+cmake ..
+make
+./simFDS
+```  
+** If the executable name has been added to the relevant path, then ```simFDS``` can be used anywhere; otherwise ```./simFDS``` can only be run from the ```build``` directory.
