@@ -39,7 +39,7 @@ The next two lines are read by the code: the numbers at the ends of the lines ca
 The subsequent lines contain the functions determining the finite dynamical system.  The function for a variable is represented as ```variable_name = function_expression```. 
 * Variable names must begin with a letter but may otherwise be any string without spaces and must not include the built-in arithmetic operator symbols.
 * Function expressions can include 
-    * ```+``` (addition), ```*``` (multiplication), ```^``` (exponentiation), ```MAX``` (maximum of a parenthesized list of variables), ```MIN``` (mimimum of a parenthesized list of variables), ```NOT``` (_x_+ NOT _x_ = _p_-1).
+    * ```+``` (addition modulo p), ```*``` (multiplication modulo p), ```^``` (exponentiation), ```MAX``` (maximum of a parenthesized list of variables), ```MIN``` (mimimum of a parenthesized list of variables), ```NOT``` (_x_+ NOT _x_ = _p_-1).
     * Boolean only (_p_=2): ```AND```, ```OR``` or ```|```, ```XOR```
     * All caps or lowercase is accepted for MAX, MIN, NOT, AND, OR, XOR. 
 
