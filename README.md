@@ -73,4 +73,4 @@ make
 ** If the directory continaing `simFDS` (in the above instructions, the build directory) has been added to the `PATH` environment variable, then ```simFDS``` can be used anywhere. ([Documentation](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/path) on this environment variable can be easily googled.) Otherwise, running `simFDS` from the command line will require using the path where `simFDS` resides. e.g. When in the build directory, use ```./simFDS```.
 
 ## Using Cyclone from a browser
-To access Cyclone from a browser using Docker Desktop, see the [instructions](Creating a web-like experience for Cyclone - desktop.docx).
+To access Cyclone from a browser using Docker Desktop, see the [instructions](Creating%20a%20web-like%20experience%20for%20Cyclone%20-%20desktop.docx).
